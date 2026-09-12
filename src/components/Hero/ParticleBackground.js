@@ -96,7 +96,7 @@ export default function ParticleBackground() {
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(50, 50, 50, ${p.opacity * 1.2})`;
+        ctx.fillStyle = `rgba(183, 28, 28, ${p.opacity * 0.55})`;
         ctx.fill();
 
         // Draw connections
@@ -107,12 +107,12 @@ export default function ParticleBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < maxDist) {
-            const opacity = (1 - dist / maxDist) * 0.15;
+            const opacity = (1 - dist / maxDist) * 0.18;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(120, 120, 120, ${opacity * 1.5})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `rgba(183, 28, 28, ${opacity})`;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }

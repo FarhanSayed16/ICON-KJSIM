@@ -335,10 +335,10 @@ export const EVENTS = [
 
 // ── Event Category Labels ──
 export const EVENT_CATEGORIES = [
-  { key: 'all', label: 'All Events' },
-  { key: 'technical', label: 'Technical Events' },
-  { key: 'non-technical', label: 'Non-Technical Events' },
-  { key: 'gaming', label: 'Gaming Events' },
+  { key: 'all', label: 'All', fullLabel: 'All Events' },
+  { key: 'technical', label: 'Technical', fullLabel: 'Technical Events' },
+  { key: 'non-technical', label: 'Non-Tech', fullLabel: 'Non-Technical Events' },
+  { key: 'gaming', label: 'Gaming', fullLabel: 'Gaming Events' },
 ];
 
 // ── Sponsors Data ──

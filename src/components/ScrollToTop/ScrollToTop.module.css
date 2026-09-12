@@ -34,9 +34,15 @@
 
 @media (max-width: 639px) {
   .button {
-    bottom: var(--space-xl);
-    right: var(--space-lg);
-    width: 44px;
-    height: 44px;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    right: 1rem;
+    width: 42px;
+    height: 42px;
+    box-shadow: 0 8px 20px rgba(183, 28, 28, 0.35);
+  }
+
+  .button:hover {
+    background: var(--crimson);
+    transform: none;
   }
 }

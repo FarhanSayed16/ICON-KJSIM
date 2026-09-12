@@ -34,6 +34,8 @@ export default function EventSchedule() {
               <button
                 key={cat.key}
                 role="tab"
+                type="button"
+                title={cat.fullLabel || cat.label}
                 aria-selected={activeCategory === cat.key}
                 className={`${styles.tab} ${activeCategory === cat.key ? styles.tabActive : ''}`}
                 onClick={() => setActiveCategory(cat.key)}

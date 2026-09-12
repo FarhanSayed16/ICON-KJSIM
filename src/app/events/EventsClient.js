@@ -86,11 +86,13 @@ export default function EventsClient() {
             </div>
 
             {/* Category Filters */}
-            <div className={styles.filters} role="tablist">
+            <div className={styles.filters} role="tablist" aria-label="Event categories">
               {EVENT_CATEGORIES.map((cat) => (
                 <button
                   key={cat.key}
+                  type="button"
                   role="tab"
+                  title={cat.fullLabel || cat.label}
                   aria-selected={activeCategory === cat.key}
                   className={`${styles.filterBtn} ${activeCategory === cat.key ? styles.filterActive : ''}`}
                   onClick={() => setActiveCategory(cat.key)}
