@@ -190,38 +190,58 @@
 /* ── Responsive ── */
 @media (max-width: 639px) {
   .hero {
-    padding: calc(72px + 1.25rem) 1rem 4.5rem;
-    justify-content: flex-start;
+    padding: calc(68px + 1rem) 1.25rem 2rem;
+    justify-content: center;
     min-height: 100dvh;
   }
 
   .content {
-    padding-top: 0.5rem;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
   }
 
   .titleGradient {
     font-size: clamp(2.75rem, 16vw, 3.75rem);
   }
 
+  .tagline {
+    font-size: clamp(0.92rem, 2.5vw, 1.1rem);
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 0.85rem;
+    padding: 0 0.5rem;
+  }
+
   .highlights {
     gap: 0.4rem;
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.85rem;
   }
 
   .highlights li {
     font-size: 0.72rem;
-    padding: 0.4rem 0.7rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .countdownWrapper {
+    margin-bottom: 1rem;
   }
 
   .ctas {
     flex-direction: column;
     align-items: stretch;
-    width: min(100%, 320px);
+    width: min(100%, 300px);
     margin-inline: auto;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
   }
 
   .ctaPrimary,
@@ -229,6 +249,13 @@
     width: 100%;
     min-width: 0;
     justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  .dateTag {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
   }
 
   .orbOne {
