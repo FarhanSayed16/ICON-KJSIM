@@ -2,33 +2,30 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { HiArrowRight } from 'react-icons/hi';
+import { HiArrowRight, HiOutlineCalendar, HiOutlineLocationMarker, HiOutlineSparkles } from 'react-icons/hi';
 import ParticleBackground from './ParticleBackground';
 import Countdown from '@/components/Countdown/Countdown';
-import { SITE_CONFIG, EVENTS, EVENT_CATEGORIES } from '@/lib/data';
+import { SITE_CONFIG, EVENTS } from '@/lib/data';
 import styles from './Hero.module.css';
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] },
   },
 };
 
 const activeEventCount = EVENTS.filter((e) => e.isActive).length;
-const featuredNames = EVENTS.filter((e) => e.isActive)
-  .slice(0, 8)
-  .map((e) => e.name);
 
 export default function Hero() {
   return (
@@ -38,7 +35,6 @@ export default function Hero() {
         <span className={styles.orbOne} />
         <span className={styles.orbTwo} />
         <span className={styles.gridGlow} />
-        <span className={styles.brandMark}>ICON</span>
       </div>
 
       <motion.div
@@ -47,60 +43,52 @@ export default function Hero() {
         initial="hidden"
         animate="visible"
       >
-        <motion.div variants={itemVariants} className={styles.stage}>
-          <h1 className={styles.title}>
-            <span className={styles.titleGradient}>ICON</span>
-            <span className={styles.titleYear}>2026</span>
-          </h1>
+        <motion.h1 variants={itemVariants} className={styles.title}>
+          <span className={styles.titleGradient}>ICON</span>
+          <span className={styles.titleYear}>2026</span>
+        </motion.h1>
 
-          <p className={styles.tagline}>{SITE_CONFIG.tagline}</p>
+        <motion.p variants={itemVariants} className={styles.tagline}>
+          {SITE_CONFIG.tagline}
+        </motion.p>
 
-          <p className={styles.subtitle}>
-            {SITE_CONFIG.description}
-            <span className={styles.subtitleBreak}> · {SITE_CONFIG.institution}</span>
-          </p>
+        <motion.p variants={itemVariants} className={styles.subtitle}>
+          {SITE_CONFIG.description} · {SITE_CONFIG.institution}
+        </motion.p>
 
-          <div className={styles.metaBar} aria-label="Event details">
+        <motion.ul variants={itemVariants} className={styles.highlights}>
+          <li>
+            <HiOutlineCalendar size={16} aria-hidden />
             <span>13–14 Feb 2026</span>
-            <span className={styles.metaDot} aria-hidden />
+          </li>
+          <li>
+            <HiOutlineLocationMarker size={16} aria-hidden />
             <span>Mumbai · KJSIM</span>
-            <span className={styles.metaDot} aria-hidden />
+          </li>
+          <li>
+            <HiOutlineSparkles size={16} aria-hidden />
             <span>{activeEventCount}+ Events</span>
-          </div>
+          </li>
+        </motion.ul>
 
-          <div className={styles.trackRow} aria-label="Event tracks">
-            {EVENT_CATEGORIES.filter((c) => c.key !== 'all').map((cat) => (
-              <span key={cat.key} className={styles.trackChip}>
-                {cat.label}
-              </span>
-            ))}
-          </div>
-
-          <div className={styles.countdownWrapper}>
-            <Countdown targetDate={SITE_CONFIG.countdownTarget} />
-          </div>
-
-          <div className={styles.ctas}>
-            <Link href="/register" className={`btn-primary ${styles.ctaPrimary}`}>
-              <span>Register Now</span>
-              <HiArrowRight />
-            </Link>
-            <Link href="/events" className={`btn-outline ${styles.ctaSecondary}`}>
-              <span>Explore Events</span>
-            </Link>
-          </div>
+        <motion.div variants={itemVariants} className={styles.countdownWrapper}>
+          <Countdown targetDate={SITE_CONFIG.countdownTarget} />
         </motion.div>
-      </motion.div>
 
-      <div className={styles.ticker} aria-hidden="true">
-        <div className={styles.tickerTrack}>
-          {[...featuredNames, ...featuredNames].map((name, i) => (
-            <span key={`${name}-${i}`} className={styles.tickerItem}>
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
+        <motion.div variants={itemVariants} className={styles.ctas}>
+          <Link href="/register" className={`btn-primary ${styles.ctaPrimary}`}>
+            <span>Register Now</span>
+            <HiArrowRight />
+          </Link>
+          <Link href="/events" className={`btn-outline ${styles.ctaSecondary}`}>
+            <span>Explore Events</span>
+          </Link>
+        </motion.div>
+
+        <motion.p variants={itemVariants} className={styles.dateTag}>
+          Official Techfest · Department of Data Science &amp; Technology
+        </motion.p>
+      </motion.div>
     </section>
   );
 }
