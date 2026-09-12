@@ -1,0 +1,225 @@
+.page {
+  padding: calc(80px + var(--space-2xl)) var(--space-xl) var(--space-4xl);
+  background: var(--bg-dark);
+  color: var(--text-white);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-2xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 2.5rem;
+  color: var(--text-white);
+}
+
+.subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 1.1rem;
+}
+
+/* ── Live Pill ── */
+.livePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.isLive {
+  background: rgba(183, 28, 28, 0.15);
+  color: #ff5252;
+  border: 1px solid #ff5252;
+}
+
+.isOffline {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5252;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 82, 82, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
+}
+
+/* ── Grid Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: var(--space-xl);
+}
+
+/* ── Video Player ── */
+.playerSection {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  background: #000;
+}
+
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.eventInfo {
+  padding: var(--space-xl);
+}
+
+.eventInfo h2 {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: var(--space-sm);
+  color: var(--text-white);
+}
+
+.eventInfo p {
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+}
+
+.offlineBanner {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/* ── Schedule Sidebar ── */
+.scheduleSection {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: var(--space-xl);
+}
+
+.scheduleSection h3 {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.scheduleItem {
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-lg);
+  position: relative;
+}
+
+/* Timeline vertical line */
+.scheduleItem::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 20px;
+  bottom: -20px;
+  width: 2px;
+  background: rgba(255,255,255,0.1);
+}
+
+.scheduleItem:last-child::before {
+  display: none;
+}
+
+/* Timeline dot */
+.scheduleItem::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+
+.itemLive::after {
+  background: #ff5252;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.5);
+}
+
+.itemPast::after {
+  background: rgba(255,255,255,0.5);
+}
+
+.itemTime {
+  font-size: 0.85rem;
+  color: var(--crimson);
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.itemTitle {
+  font-weight: 500;
+  color: var(--text-white);
+}
+
+.itemPast .itemTitle {
+  color: rgba(255,255,255,0.5);
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: calc(70px + var(--space-lg)) var(--space-md) var(--space-2xl);
+  }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+}
