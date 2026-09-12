@@ -1,0 +1,42 @@
+{
+  "name": "icon-kjsim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ICON 2026 — DATATRON | Official Techfest Website of KJSIM, Somaiya Vidyavihar University",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next-sitemap",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "canvas-confetti": "^1.9.4",
+    "chart.js": "^4.5.1",
+    "dotenv": "^17.4.2",
+    "framer-motion": "^13.2.0",
+    "html5-qrcode": "^2.3.8",
+    "jose": "^6.2.12",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.0",
+    "next": "16.3.5",
+    "next-sitemap": "^4.2.3",
+    "nodemailer": "^10.0.8",
+    "qrcode": "^1.5.4",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.8",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "19.2.8",
+    "react-easy-crop": "^6.2.3",
+    "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.7.0",
+    "recharts": "^3.10.1",
+    "resend": "^6.28.0",
+    "twilio": "^6.1.1",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5"
+  }
+}
