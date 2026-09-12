@@ -1,0 +1,9 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#B71C1C"/><stop offset="100%" stop-color="#0a0a0f"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <circle cx="650" cy="80" r="120" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="100" cy="380" r="90" fill="rgba(255,255,255,0.05)"/>
+  <text x="40" y="60" fill="rgba(255,255,255,0.7)" font-family="Arial,sans-serif" font-size="22" font-weight="600">ICON 2026 · DATATRON</text>
+  <text x="40" y="240" fill="#ffffff" font-family="Arial,sans-serif" font-size="56" font-weight="800">Code Icon</text>
+  <text x="40" y="290" fill="rgba(255,255,255,0.75)" font-family="Arial,sans-serif" font-size="22">KJSIM Techfest Event</text>
+</svg>

@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#ffffff"/>
+  <circle cx="40" cy="120" r="3" fill="#f8cdd0"/><circle cx="40" cy="160" r="3" fill="#f8cdd0"/><circle cx="40" cy="200" r="3" fill="#f8cdd0"/>
+  <circle cx="760" cy="120" r="3" fill="#f8cdd0"/><circle cx="760" cy="160" r="3" fill="#f8cdd0"/><circle cx="760" cy="200" r="3" fill="#f8cdd0"/>
+  <text x="48" y="70" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#3d2b8c">iCON <tspan fill="#6a4bc4">2026</tspan></text>
+  <text x="220" y="68" font-family="Arial,sans-serif" font-size="18" fill="#9aa0a6">Presents</text>
+  <rect x="120" y="280" width="560" height="280" rx="24" fill="#fafafa" stroke="#1565C0" stroke-width="2"/>
+  <text x="400" y="400" text-anchor="middle" font-family="Georgia,serif" font-size="64" font-weight="700" fill="#1565C0">Debugging</text>
+  <text x="400" y="470" text-anchor="middle" font-family="Georgia,serif" font-size="48" font-weight="700" fill="#1565C0">Challenge</text>
+  <text x="400" y="620" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#666">K J Somaiya Institute of Management</text>
+  <text x="400" y="660" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#888">ICON 2026 · DATATRON</text>
+  <rect x="0" y="940" width="800" height="60" fill="#B71C1C"/>
+</svg>
