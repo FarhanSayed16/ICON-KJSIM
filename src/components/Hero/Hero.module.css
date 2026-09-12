@@ -1,0 +1,166 @@
+/* ── Hero — Light Theme ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: calc(80px + var(--space-3xl)) var(--space-lg) var(--space-3xl);
+  overflow: hidden;
+  background: var(--bg-white);
+}
+
+.overlay {
+  display: none; /* Not needed on light theme */
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.staticBg {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-light);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+/* ── Theme Badge ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.4rem 1.2rem;
+  font-family: var(--font-space), monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Title ── */
+.title {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.titleGradient {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--crimson);
+  letter-spacing: -0.03em;
+}
+
+.titleYear {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+/* ── Text ── */
+.tagline {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+}
+
+/* ── Countdown Wrapper ── */
+.countdownWrapper {
+  margin-bottom: var(--space-xl);
+}
+
+/* ── CTAs ── */
+.ctas {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+}
+
+.ctaPrimary,
+.ctaSecondary {
+  /* base styles from globals */
+}
+
+/* ── Date Tag ── */
+.dateTag {
+  font-family: var(--font-space), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ── Scroll Indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: var(--space-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.scrollMouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid var(--border-medium);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.scrollWheel {
+  width: 4px;
+  height: 8px;
+  background: var(--crimson);
+  border-radius: 2px;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 639px) {
+  .hero {
+    padding-top: calc(70px + var(--space-2xl));
+  }
+  .ctas {
+    flex-direction: column;
+    align-items: center;
+  }
+}

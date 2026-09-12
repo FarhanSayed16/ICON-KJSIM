@@ -1,0 +1,211 @@
+/* ── Navbar — Light Theme ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  padding: var(--space-md) 0;
+  transition: all var(--transition-base);
+  background: transparent;
+}
+
+.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.hidden {
+  transform: translateY(-100%);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* ── Logo ── */
+.logoLeft {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.somaiyaLogo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ── Desktop Nav Links ── */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--crimson);
+  background: var(--crimson-bg);
+}
+
+.active {
+  color: var(--crimson);
+  font-weight: 600;
+}
+
+/* ── Nav Right (Register + ICON Logo) ── */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.registerBtn {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  background: var(--crimson);
+  color: white;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.registerBtn:hover {
+  background: var(--crimson-light);
+  box-shadow: var(--shadow-glow-crimson);
+  transform: translateY(-1px);
+}
+
+.iconLogo {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: calc(var(--z-overlay) + 1);
+  color: var(--text-primary);
+}
+
+/* ── Mobile Drawer ── */
+.drawer {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-white);
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+.drawerOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.drawerLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawerLink {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-lg);
+  transition: color var(--transition-fast);
+}
+
+.drawerLink:hover {
+  color: var(--crimson);
+}
+
+.drawerActive {
+  color: var(--crimson);
+}
+
+.drawerRegister {
+  margin-top: var(--space-md);
+  padding: 0.7rem 2.5rem;
+  font-size: 1.1rem;
+  background: var(--crimson);
+  color: white;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+}
+
+.drawerRegister:hover {
+  background: var(--crimson-light);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: calc(var(--z-overlay) - 1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  .navLinks,
+  .navRight {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+}

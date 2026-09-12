@@ -1,0 +1,50 @@
+.loaderOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-white);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loaderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.logo {
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(183, 28, 28, 0.2));
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); filter: drop-shadow(0 0 10px rgba(183, 28, 28, 0.1)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(183, 28, 28, 0.3)); }
+}
+
+.progressContainer {
+  width: 200px;
+  height: 2px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--crimson);
+  border-radius: var(--radius-full);
+}
+
+.loadingText {
+  font-family: var(--font-space), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--text-tertiary);
+  margin-top: calc(-1 * var(--space-md));
+}
