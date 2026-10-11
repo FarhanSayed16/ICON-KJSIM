@@ -268,7 +268,7 @@ export default function AdminDashboardClient({
               fetchDashboardData(currentPage, searchTerm, eventFilter, paymentFilter, true)
             }
           >
-            <HiOutlineRefresh size={16} className={isRefreshing ? 'spin' : ''} />
+            <HiOutlineRefresh size={16} className={isRefreshing ? styles.spin : ''} />
             Refresh
           </button>
         </div>
@@ -867,16 +867,6 @@ export default function AdminDashboardClient({
         </div>
       )}
 
-      <style jsx global>{`
-        .spin {
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
 }
