@@ -53,7 +53,7 @@ const HIGHLIGHT_MOMENTS = [
     id: 3,
     src: '/images/events/Icon_Hackathon.jpeg',
     category: 'hackathon',
-    badge: 'CODE • 24 HOURS',
+    badge: 'CODE • 12 HOURS',
     title: 'Late Night Code Sprints',
     venue: 'Innovation Tech Lab 205',
     description: 'Teams debugging machine learning pipelines and algorithm challenges past midnight.',
@@ -210,7 +210,7 @@ export default function GalleryPreview() {
               className="font-['Fira_Sans'] font-fira-sans text-sm sm:text-base text-[#58595B] max-w-md m-0 leading-relaxed"
               style={{ fontFamily: "'Fira Sans', -apple-system, sans-serif" }}
             >
-              Glimpses of raw energy, 24-hour code marathons, esports battles, and unforgettable moments at KJSIM.
+              Glimpses of raw energy, 12-hour code marathons, esports battles, and unforgettable moments at KJSIM.
             </p>
           </div>
         </ScrollReveal>

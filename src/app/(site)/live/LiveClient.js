@@ -89,7 +89,7 @@ export default function LiveClient({ initialData }) {
             </div>
 
             {liveData.isLive && liveData.currentEvent && (
-              <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#E5E7EB] shadow-sm relative overflow-hidden">
+              <div className="bg-white p-6 sm:p-7 rounded-none border border-[#E5E7EB] shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-12 pointer-events-none overflow-hidden">
                   <div className="absolute top-0 right-0 w-8 h-2 bg-[#ED1C24]" />
                   <div className="absolute top-0 right-0 w-2 h-8 bg-[#B7202E]" />
@@ -108,7 +108,7 @@ export default function LiveClient({ initialData }) {
           </div>
 
           {/* Right: Schedule */}
-          <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#E5E7EB] shadow-sm h-fit relative overflow-hidden">
+          <div className="bg-white p-6 sm:p-7 rounded-none border border-[#E5E7EB] shadow-sm h-fit relative overflow-hidden">
             <div className="absolute top-0 right-0 w-12 h-12 pointer-events-none overflow-hidden">
               <div className="absolute top-0 right-0 w-8 h-2 bg-[#ED1C24]" />
               <div className="absolute top-0 right-0 w-2 h-8 bg-[#B7202E]" />

@@ -174,7 +174,7 @@ export default function EventsClient({ events = [] }) {
         {/* ── Flagship Spotlight Banner (If Available) ── */}
         {spotlightEvent && (
           <ScrollReveal delay={0.1}>
-            <div className="mb-12 bg-white border-2 border-[#B7202E]/30  p-6 sm:p-8 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
+            <div className="mb-12 bg-white border-2 border-[#B7202E]/30 rounded-none p-6 sm:p-8 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
               <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
                 <div className="absolute top-0 right-0 w-12 h-2.5 bg-[#ED1C24]" />
                 <div className="absolute top-0 right-0 w-2.5 h-12 bg-[#B7202E]" />
@@ -197,7 +197,7 @@ export default function EventsClient({ events = [] }) {
                   </h3>
 
                   <p className="font-['Fira_Sans'] text-sm sm:text-base text-[#58595B] leading-relaxed line-clamp-2 m-0">
-                    {spotlightEvent.description || 'Our signature 24-hour sprint. Assemble your squad and build the future.'}
+                    {spotlightEvent.description || 'Our signature 12-hour sprint. Assemble your squad and build the future.'}
                   </p>
                 </div>
 
@@ -354,7 +354,7 @@ export default function EventsClient({ events = [] }) {
 
         {/* ── Bottom Arena Call To Action ── */}
         <ScrollReveal>
-          <div className="mt-16 sm:mt-24 p-8 sm:p-12 bg-[#231F20] text-white rounded-3xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl">
+          <div className="mt-16 sm:mt-24 p-8 sm:p-12 bg-[#231F20] text-white rounded-none relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl">
             <div className="absolute top-0 left-0 w-16 h-16 pointer-events-none overflow-hidden">
               <div className="absolute top-0 left-0 w-12 h-2 bg-[#ED1C24]" />
               <div className="absolute top-0 left-0 w-2 h-12 bg-[#B7202E]" />
@@ -365,7 +365,7 @@ export default function EventsClient({ events = [] }) {
                 READY TO JOIN THE ARENA?
               </span>
               <h2 className="font-['Marcellus'] text-3xl sm:text-4xl text-white font-normal m-0">
-                Register For Multiple Events
+                Register For Events
               </h2>
               <p className="font-['Fira_Sans'] text-sm sm:text-base text-white/70 leading-relaxed m-0">
                 Secure your official participant badge, access the competition discord, and get ready for 2 action-packed days at KJSIM.

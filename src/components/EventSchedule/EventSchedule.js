@@ -43,14 +43,14 @@ const EVENT_CUSTOM_INFO = {
     tag: 'TEAM • HACKATHON • FLAGSHIP',
     firstPrize: '₹12,000',
     poolText: 'Pool: ₹22,500',
-    highlight: '24-HOUR SPRINT',
+    highlight: '12-HOUR SPRINT',
     venue: 'Tech Lab & Innovation Hall, KJSIM',
   },
   'hackathon': {
     tag: 'TEAM • HACKATHON • FLAGSHIP',
     firstPrize: '₹30,000',
     poolText: 'Pool: ₹50,000',
-    highlight: '24-HOUR SPRINT',
+    highlight: '12-HOUR SPRINT',
     venue: 'Tech Lab & Innovation Hall, KJSIM',
   },
   'prompt-engineering': {

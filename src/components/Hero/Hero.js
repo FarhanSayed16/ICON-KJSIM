@@ -114,7 +114,7 @@ export default function Hero({ siteConfig, eventCount } = {}) {
           {/* Main Title */}
           <motion.h1
             variants={itemTitle}
-            className={`${marcellus.className} font-marcellus text-[clamp(4.2rem,14vw,12.5rem)] text-[#231F20] font-normal leading-[0.84] tracking-tight mb-4 sm:mb-5 select-none`}
+            className={`${marcellus.className} font-marcellus text-[clamp(3.5rem,10.5vw,9.5rem)] text-[#231F20] font-normal leading-[0.84] tracking-tight mb-4 sm:mb-5 select-none`}
             style={{ fontFamily: "'Marcellus', Georgia, serif" }}
           >
             {siteConfig?.name || 'ICON'}
@@ -123,10 +123,10 @@ export default function Hero({ siteConfig, eventCount } = {}) {
           {/* Red "26" Badge Box */}
           <motion.div
             variants={itemBadge}
-            className="inline-block bg-[#B7202E] border-l-4 border-[#ED1C24] px-8 sm:px-10 md:px-14 py-2 sm:py-2.5 md:py-3.5 mb-6 sm:mb-8 shadow-sm hover:scale-[1.02] transition-transform duration-200"
+            className="inline-block bg-[#B7202E] border-l-4 border-[#ED1C24] px-6 sm:px-8 md:px-11 py-1.5 sm:py-2 md:py-2.5 mb-5 sm:mb-7 shadow-sm hover:scale-[1.02] transition-transform duration-200"
           >
             <span
-              className={`${marcellus.className} font-marcellus text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white font-normal leading-none block`}
+              className={`${marcellus.className} font-marcellus text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white font-normal leading-none block`}
               style={{ fontFamily: "'Marcellus', Georgia, serif" }}
             >
               {siteConfig?.edition ? String(siteConfig.edition).slice(-2) : '26'}
@@ -134,16 +134,16 @@ export default function Hero({ siteConfig, eventCount } = {}) {
           </motion.div>
 
           {/* Theme Row with Animated Accent Line */}
-          <motion.div variants={itemSlideLeft} className="flex items-center gap-3.5 sm:gap-4 mb-4 sm:mb-5">
+          <motion.div variants={itemSlideLeft} className="flex items-center gap-3 sm:gap-3.5 mb-3.5 sm:mb-4">
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
               style={{ originX: 0 }}
-              className="w-12 sm:w-16 md:w-20 h-1 sm:h-1.5 bg-[#ED1C24] shrink-0"
+              className="w-10 sm:w-12 md:w-16 h-1 sm:h-1.5 bg-[#ED1C24] shrink-0"
             />
             <span
-              className={`${marcellus.className} font-marcellus text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#B7202E] font-normal`}
+              className={`${marcellus.className} font-marcellus text-xl sm:text-2xl md:text-3xl lg:text-4xl text-[#B7202E] font-normal`}
               style={{ fontFamily: "'Marcellus', Georgia, serif" }}
             >
               Theme: {siteConfig?.theme || 'Pixel'}
@@ -153,24 +153,24 @@ export default function Hero({ siteConfig, eventCount } = {}) {
           {/* Tagline Description */}
           <motion.p
             variants={itemFadeUp}
-            className={`${firaSans.className} font-fira-sans text-base sm:text-lg md:text-xl lg:text-2xl text-[#58595B] max-w-xl lg:max-w-2xl leading-relaxed mb-8 sm:mb-10 font-normal`}
+            className={`${firaSans.className} font-fira-sans text-sm sm:text-base md:text-lg lg:text-xl text-[#58595B] max-w-xl lg:max-w-2xl leading-relaxed mb-7 sm:mb-9 font-normal`}
             style={{ fontFamily: "'Fira Sans', -apple-system, sans-serif" }}
           >
             {siteConfig?.tagline || siteConfig?.slogan || 'Every Pixel. A Possibility.'}
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div variants={itemFadeUp} className="flex flex-wrap items-center gap-4 sm:gap-5 mb-8 sm:mb-10">
+          <motion.div variants={itemFadeUp} className="flex flex-wrap items-center gap-3.5 sm:gap-4 mb-6 sm:mb-8">
             <Link
               href="/events"
-              className={`bg-[#B7202E] hover:bg-[#ED1C24] text-white ${firaSans.className} font-fira-sans font-semibold text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer no-underline inline-block`}
+              className={`bg-[#B7202E] hover:bg-[#ED1C24] text-white ${firaSans.className} font-fira-sans font-semibold text-sm sm:text-base px-7 sm:px-9 py-3 sm:py-3.5 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer no-underline inline-block`}
               style={{ fontFamily: "'Fira Sans', -apple-system, sans-serif" }}
             >
               Explore events
             </Link>
             <Link
               href="/register"
-              className={`bg-white hover:bg-[#ED1C24] hover:text-white hover:border-[#ED1C24] text-[#231F20] border-2 border-[#231F20] ${firaSans.className} font-fira-sans font-semibold text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 transition-all shadow-xs hover:-translate-y-0.5 active:translate-y-0 cursor-pointer no-underline inline-block`}
+              className={`bg-white hover:bg-[#ED1C24] hover:text-white hover:border-[#ED1C24] text-[#231F20] border-2 border-[#231F20] ${firaSans.className} font-fira-sans font-semibold text-sm sm:text-base px-7 sm:px-9 py-3 sm:py-3.5 transition-all shadow-xs hover:-translate-y-0.5 active:translate-y-0 cursor-pointer no-underline inline-block`}
               style={{ fontFamily: "'Fira Sans', -apple-system, sans-serif" }}
             >
               Register now

@@ -74,7 +74,7 @@ export default function ContactForm() {
   return (
     <section className="relative pt-20 sm:pt-28 pb-32 sm:pb-40 bg-white overflow-hidden" id="contact">
       {/* ── Section Header ── */}
-      <div className="container relative z-10 mb-12 sm:mb-16">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-12 sm:mb-16">
         <ScrollReveal variant="fade-up">
           <div className="text-center max-w-2xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-3">
@@ -97,10 +97,10 @@ export default function ContactForm() {
       {/* ── Left-Right 2-Column Grid (Brochure & Contact Form) ── */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
-          
+
           {/* ── Left Column: Brochure Card ── */}
           <ScrollReveal variant="slide-left" delay={0.1} className="h-full">
-            <div className="bg-[#FAF8F8] border border-[#E5E7EB] rounded-2xl p-8 sm:p-10 lg:p-12 shadow-sm hover:shadow-md hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden group">
+            <div className="bg-[#FAF8F8] border border-[#E5E7EB]  p-8 sm:p-10 lg:p-12 shadow-sm hover:shadow-md hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden group">
               {/* Somaiya Brand Top Accent Bar */}
               <div className="absolute top-0 left-0 w-20 h-1.5 bg-[#B7202E] flex">
                 <div className="w-8 h-full bg-[#ED1C24]" />
@@ -168,7 +168,7 @@ export default function ContactForm() {
 
           {/* ── Right Column: Contact Form Card ── */}
           <ScrollReveal variant="slide-right" delay={0.2} className="h-full">
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-8 sm:p-10 lg:p-12 shadow-sm hover:shadow-md hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden group">
+            <div className="bg-white border border-[#E5E7EB]  p-8 sm:p-10 lg:p-12 shadow-sm hover:shadow-md hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden group">
               {/* Somaiya Brand Top Accent Bar */}
               <div className="absolute top-0 right-0 w-20 h-1.5 bg-[#B7202E] flex">
                 <div className="flex-1 h-full bg-[#B7202E]" />

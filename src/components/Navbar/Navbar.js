@@ -23,8 +23,8 @@ export const NAV_ITEMS = [
   },
   {
     category: 'Coding',
-    title: 'Hackathon',
-    subtitle: 'Code ICON 2026',
+    title: 'CodeICON',
+    subtitle: '12-Hour Arena',
     href: '/hackathon',
   },
   {

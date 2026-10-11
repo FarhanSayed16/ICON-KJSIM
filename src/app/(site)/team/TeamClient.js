@@ -216,7 +216,7 @@ export default function TeamClient() {
 
                   {/* ── Faculty Mentorship Feature Spotlight ── */}
                   {isFaculty ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-[#E5E7EB] rounded-3xl p-7 sm:p-10 shadow-xs relative overflow-hidden">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-[#E5E7EB] rounded-none p-7 sm:p-10 shadow-xs relative overflow-hidden">
                       {/* Somaiya Geometric Corner Notch */}
                       <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
                         <div className="absolute top-0 right-0 w-6 h-6 bg-[#B7202E]/10 border-b-2 border-l-2 border-[#B7202E]" />
@@ -318,7 +318,7 @@ export default function TeamClient() {
 
                         return (
                           <ScrollReveal key={member.name} delay={i * 0.05}>
-                            <div className="group bg-white border border-[#E5E7EB] rounded-3xl p-5 shadow-xs hover:shadow-xl hover:border-[#B7202E]/50 transition-all duration-300 flex flex-col justify-between h-full relative">
+                            <div className="group bg-white border border-[#E5E7EB] rounded-none p-5 shadow-xs hover:shadow-xl hover:border-[#B7202E]/50 transition-all duration-300 flex flex-col justify-between h-full relative">
                               {/* Somaiya Corner Geometric Notch */}
                               <div className="absolute top-0 right-0 w-10 h-10 pointer-events-none overflow-hidden">
                                 <div className="absolute top-0 right-0 w-3.5 h-3.5 bg-[#B7202E]/10 border-b border-l border-[#B7202E]/40" />
@@ -418,7 +418,7 @@ export default function TeamClient() {
 
         {/* ── Volunteer Acknowledgment Banner (Framed without plain stripes) ── */}
         <ScrollReveal>
-          <div className="mt-16 sm:mt-24 p-8 sm:p-14 bg-white border border-[#E5E7EB] rounded-3xl text-center max-w-4xl mx-auto relative overflow-hidden shadow-xs">
+          <div className="mt-16 sm:mt-24 p-8 sm:p-14 bg-white border border-[#E5E7EB] rounded-none text-center max-w-4xl mx-auto relative overflow-hidden shadow-xs">
             {/* Somaiya Corner Geometric Notch */}
             <div className="absolute top-0 right-0 w-14 h-14 pointer-events-none overflow-hidden">
               <div className="absolute top-0 right-0 w-5 h-5 bg-[#B7202E]/10 border-b border-l border-[#B7202E]" />

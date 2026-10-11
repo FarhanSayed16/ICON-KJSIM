@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import FooterGate from '@/components/Footer/FooterGate';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import ScrollToTopGate from '@/components/ScrollToTop/ScrollToTopGate';
+import ScrollToTopOnNav from '@/components/ScrollToTopOnNav';
 import PageTransition from '@/components/PageTransition/PageTransition';
 
 /**
@@ -11,6 +12,7 @@ import PageTransition from '@/components/PageTransition/PageTransition';
 export default function SiteLayout({ children }) {
   return (
     <>
+      <ScrollToTopOnNav />
       <LoadingScreen />
       <Navbar />
       <main id="main-content">

@@ -42,6 +42,14 @@ const CATEGORY_LABEL = {
   'non-technical': 'Non-Technical',
 };
 
+const CATEGORY_SUIT = {
+  technical: '♠',
+  sports: '♣',
+  gaming: '♦',
+  'mini-games': '♥',
+  'non-technical': '♦',
+};
+
 function feeLabel(fee) {
   const n = Number(fee) || 0;
   return n === 0 ? 'FREE' : `₹${n}`;
@@ -250,7 +258,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
   if (config.registrationOpen === false) {
     return (
       <div className="min-h-screen bg-[#FAF8F8] pt-28 pb-20 px-4 flex items-center justify-center font-['Fira_Sans']">
-        <div className="max-w-md w-full bg-white border border-[#E5E7EB] rounded-3xl p-8 sm:p-10 text-center shadow-lg relative overflow-hidden">
+        <div className="max-w-md w-full bg-white border border-[#E5E7EB] rounded-none p-8 sm:p-10 text-center shadow-lg relative overflow-hidden">
           <div className="w-full h-1.5 bg-[#B7202E] flex absolute top-0 left-0">
             <div className="w-12 h-full bg-[#ED1C24]" />
             <div className="flex-1 h-full bg-[#B7202E]" />
@@ -305,7 +313,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
+
           {/* Somaiya Edge Hero Header */}
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 pt-4">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20 mb-4 shadow-2xs">
@@ -328,11 +336,10 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <button
                   key={cat.id}
                   onClick={() => setPickerFilter(cat.id)}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap cursor-pointer border ${
-                    pickerFilter === cat.id
-                      ? 'bg-[#B7202E] text-white border-[#B7202E] shadow-xs'
-                      : 'text-[#58595B] bg-[#FAF8F8] border-[#E5E7EB] hover:text-[#231F20] hover:border-[#B7202E]/30'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap cursor-pointer border ${pickerFilter === cat.id
+                    ? 'bg-[#B7202E] text-white border-[#B7202E] shadow-xs'
+                    : 'text-[#58595B] bg-[#FAF8F8] border-[#E5E7EB] hover:text-[#231F20] hover:border-[#B7202E]/30'
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -378,7 +385,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <Link
                     key={ev.slug}
                     href={`/register?event=${ev.slug}`}
-                    className="group relative bg-white border border-[#E5E7EB] hover:border-[#B7202E]/60 rounded-3xl p-6 sm:p-7 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                    className="group relative bg-white border border-[#E5E7EB] hover:border-[#B7202E]/60 rounded-none p-6 sm:p-7 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
                   >
                     {/* Somaiya Corner Geometric Notch */}
                     <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none overflow-hidden">
@@ -388,15 +395,15 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     <div>
                       {/* Top Badges */}
                       <div className="flex items-center justify-between gap-2 mb-3">
-                        <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-[#FAF8F8] border border-[#E5E7EB] text-[#58595B]">
-                          {CATEGORY_LABEL[ev.category] || ev.category}
+                        <span className="text-[11px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-none bg-[#FAF8F8] border border-[#E5E7EB] text-[#58595B] flex items-center gap-1.5 font-mono">
+                          <span className="text-[#B7202E] font-mono text-xs">{CATEGORY_SUIT[ev.category] || '♠'}</span>
+                          <span>{CATEGORY_LABEL[ev.category] || ev.category}</span>
                         </span>
                         <span
-                          className={`text-xs font-bold px-3 py-0.5 rounded-full ${
-                            fee === 0
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20'
-                          }`}
+                          className={`text-xs font-bold px-3 py-0.5 rounded-full ${fee === 0
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20'
+                            }`}
                         >
                           {feeLabel(fee)}
                         </span>
@@ -447,7 +454,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
   if (!selectedEvent) {
     return (
       <div className="min-h-screen bg-[#FAF8F8] pt-28 pb-20 px-4 flex items-center justify-center font-['Fira_Sans']">
-        <div className="max-w-md w-full bg-white border border-[#E5E7EB] rounded-3xl p-8 sm:p-10 text-center shadow-lg">
+        <div className="max-w-md w-full bg-white border border-[#E5E7EB] rounded-none p-8 sm:p-10 text-center shadow-lg">
           <HiOutlineExclamation className="text-4xl text-[#B7202E] mx-auto mb-3" />
           <h1 className="font-['Marcellus'] text-2xl sm:text-3xl text-[#231F20] mb-2 font-normal">Event Unavailable</h1>
           <p className="text-[#58595B] text-sm mb-6 leading-relaxed font-normal">
@@ -466,42 +473,70 @@ export default function RegistrationClient({ events = [], siteConfig }) {
 
   // ── Single-event registration view ──────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#FAF8F8] pt-24 sm:pt-32 pb-24 font-['Fira_Sans'] relative overflow-hidden">
-      {/* Somaiya Edge Device */}
-      <SomaiyaEdge
-        variant="macro-top-right-down"
-        dropHeight={160}
-        className="absolute top-0 left-0 right-0 h-[44px] sm:h-[56px] z-10"
-      />
+    <div className="min-h-screen bg-[#141213] text-white pt-24 sm:pt-32 pb-24 font-['Fira_Sans'] relative overflow-hidden">
+
+      {/* 1 Ace of Spades Card in Background Corner (Alice in Borderland Theme) */}
+      <div className="absolute top-24 right-4 sm:right-8 lg:right-12 w-48 sm:w-60 aspect-[5/7] pointer-events-none select-none z-0 rotate-[14deg] opacity-50 sm:opacity-60 transition-opacity">
+        <div className="w-full h-full bg-[#121011]/90 border border-white/20 rounded-none p-4 shadow-[0_0_35px_rgba(237,28,36,0.35)] relative overflow-hidden flex flex-col justify-between">
+          {/* Inner card double border */}
+          <div className="absolute inset-2 border border-white/10 pointer-events-none" />
+          <div className="absolute inset-2.5 border border-[#ED1C24]/30 pointer-events-none" />
+
+          {/* Top-left Corner Index */}
+          <div className="flex flex-col items-start leading-none z-10">
+            <span className="font-['Marcellus'] text-3xl sm:text-4xl font-bold text-white tracking-tighter">A</span>
+            <span className="text-2xl sm:text-3xl text-[#ED1C24] drop-shadow-[0_0_10px_#ED1C24] mt-0.5">♠</span>
+          </div>
+
+          {/* Center Ace of Spades Emblem */}
+          <div className="my-auto text-center z-10 flex flex-col items-center">
+            <div className="text-7xl sm:text-8xl text-[#ED1C24] drop-shadow-[0_0_24px_rgba(237,28,36,0.85)]">
+              ♠
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-stone-400 mt-2">
+              ACE OF SPADES
+            </span>
+          </div>
+
+          {/* Bottom-right Corner Index */}
+          <div className="flex flex-col items-end leading-none rotate-180 z-10">
+            <span className="font-['Marcellus'] text-3xl sm:text-4xl font-bold text-white tracking-tighter">A</span>
+            <span className="text-2xl sm:text-3xl text-[#ED1C24] drop-shadow-[0_0_10px_#ED1C24] mt-0.5">♠</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Red Atmosphere Radial Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#B7202E]/10 blur-[140px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Navigation Breadcrumb */}
         <div className="mb-6 pt-2">
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#58595B] hover:text-[#B7202E] transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-stone-300 hover:text-white transition-colors"
           >
-            <HiArrowLeft className="text-base" /> <span>Change Event / View All Arenas</span>
+            <HiArrowLeft className="text-base" /> <span>Change Event / View All Events</span>
           </Link>
         </div>
 
-        {/* 3-Step Flow Indicator Ribbon */}
-        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 mb-8 shadow-xs">
+        {/* 3-Step Flow Indicator Ribbon (Clean Somaiya White) */}
+        <div className="bg-white border border-[#E5E7EB] rounded-none p-3.5 sm:p-4 mb-8 shadow-sm">
           <div className="grid grid-cols-3 gap-2 text-center text-xs font-semibold">
             <div className="flex items-center justify-center gap-2 text-emerald-600">
-              <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700">
+              <span className="w-5 h-5 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-600">
                 <HiOutlineCheck className="w-3.5 h-3.5" />
               </span>
               <span className="hidden sm:inline">1. Select Event</span>
               <span className="sm:hidden">1. Event</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-[#B7202E]">
-              <span className="w-5 h-5 rounded-full bg-[#B7202E] text-white flex items-center justify-center text-[10px] font-bold">2</span>
-              <span className="hidden sm:inline">2. Participant &amp; Verification</span>
+              <span className="w-5 h-5 rounded-full bg-[#B7202E] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">2</span>
+              <span className="hidden sm:inline">2. Participant Details</span>
               <span className="sm:hidden">2. Form</span>
             </div>
-            <div className="flex items-center justify-center gap-2 text-[#58595B]/50">
+            <div className="flex items-center justify-center gap-2 text-[#58595B]">
               <span className="w-5 h-5 rounded-full bg-[#FAF8F8] border border-[#E5E7EB] flex items-center justify-center text-[10px]">3</span>
               <span className="hidden sm:inline">3. Official Pass</span>
               <span className="sm:hidden">3. Pass</span>
@@ -511,27 +546,27 @@ export default function RegistrationClient({ events = [], siteConfig }) {
 
         {/* 2-Column Responsive Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* ── LEFT COLUMN: Event Focus & Payment Summary (5 cols) ── */}
+
+          {/* ── LEFT COLUMN: Event Focus & Payment Summary (5 cols, Clean Somaiya White) ── */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
-            
+
             {/* Event Summary Card */}
-            <div className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-7 shadow-xs relative overflow-hidden">
-              <div className="w-full h-1.5 bg-[#FAF8F8] flex absolute top-0 left-0">
+            <div className="bg-white border border-[#E5E7EB] rounded-none p-6 sm:p-7 shadow-lg relative overflow-hidden text-[#231F20]">
+              <div className="w-full h-1.5 bg-[#B7202E] flex absolute top-0 left-0">
                 <div className="w-16 h-full bg-[#ED1C24]" />
                 <div className="flex-1 h-full bg-[#B7202E]" />
               </div>
 
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20">
-                  {CATEGORY_LABEL[selectedEvent.category] || selectedEvent.category}
+                <span className="text-xs font-medium uppercase px-3 py-1 rounded-none bg-[#FAF8F8] text-[#58595B] border border-[#E5E7EB] flex items-center gap-1.5 font-mono">
+                  <span className="text-[#B7202E]">{CATEGORY_SUIT[selectedEvent.category] || '♠'}</span>
+                  <span>{CATEGORY_LABEL[selectedEvent.category] || selectedEvent.category}</span>
                 </span>
                 <span
-                  className={`text-sm font-bold px-3 py-1 rounded-full ${
-                    payableAmount === 0
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : 'bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20'
-                  }`}
+                  className={`text-sm font-bold font-mono px-3 py-1 rounded-full ${payableAmount === 0
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-[#B7202E]/10 text-[#B7202E] border border-[#B7202E]/20'
+                    }`}
                 >
                   {feeLabel(payableAmount)}
                 </span>
@@ -545,25 +580,25 @@ export default function RegistrationClient({ events = [], siteConfig }) {
               </p>
 
               {/* Schedule Strip */}
-              <div className="space-y-2.5 pt-4 border-t border-[#E5E7EB] text-xs text-[#231F20]">
+              <div className="space-y-2.5 pt-4 border-t border-[#E5E7EB] text-xs text-[#58595B]">
                 <div className="flex items-center gap-2.5">
                   <HiOutlineCalendar className="text-[#B7202E] text-base shrink-0" />
                   <span>
-                    <strong>Date:</strong> {selectedEvent.date || 'TBA'}
+                    <strong className="text-[#231F20]">Date:</strong> {selectedEvent.date || 'TBA'}
                   </span>
                 </div>
                 {selectedEvent.time && (
                   <div className="flex items-center gap-2.5">
                     <HiOutlineClock className="text-[#B7202E] text-base shrink-0" />
                     <span>
-                      <strong>Timing:</strong> {selectedEvent.time}
+                      <strong className="text-[#231F20]">Timing:</strong> {selectedEvent.time}
                     </span>
                   </div>
                 )}
                 <div className="flex items-center gap-2.5">
                   <HiOutlineLocationMarker className="text-[#B7202E] text-base shrink-0" />
                   <span>
-                    <strong>Venue:</strong>{' '}
+                    <strong className="text-[#231F20]">Venue:</strong>{' '}
                     {selectedEvent.venue || 'KJ Somaiya Institute of Management, Vidyavihar'}
                   </span>
                 </div>
@@ -571,7 +606,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <div className="flex items-center gap-2.5">
                     <HiOutlineUser className="text-[#B7202E] text-base shrink-0" />
                     <span>
-                      <strong>Format:</strong> {selectedEvent.teamSize}
+                      <strong className="text-[#231F20]">Format:</strong> {selectedEvent.teamSize}
                     </span>
                   </div>
                 )}
@@ -580,20 +615,20 @@ export default function RegistrationClient({ events = [], siteConfig }) {
 
             {/* Official Payment QR Box (If Paid Event) */}
             {payableAmount > 0 && (
-              <div className="bg-white border-2 border-[#B7202E]/30 rounded-3xl p-6 sm:p-7 shadow-sm text-center relative overflow-hidden">
-                <div className="flex items-center justify-center gap-2 text-[#B7202E] font-bold text-xs tracking-wider uppercase mb-4">
+              <div className="bg-white border-2 border-[#B7202E]/20 rounded-none p-6 sm:p-7 shadow-lg text-center relative overflow-hidden text-[#231F20]">
+                <div className="flex items-center justify-center gap-2 text-[#B7202E] font-bold text-xs tracking-wider uppercase mb-4 font-mono">
                   <HiOutlineCreditCard className="text-base" />
                   <span>Somaiya Official UPI Gateway</span>
                 </div>
 
                 {paymentQr?.qrImageUrl ? (
                   <div className="flex flex-col items-center">
-                    <div className="relative p-3 bg-white border-2 border-[#E5E7EB] rounded-2xl shadow-inner mb-3">
+                    <div className="relative p-3 bg-white border-2 border-[#E5E7EB] rounded-none shadow-sm mb-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={paymentQr.qrImageUrl}
                         alt={`Somaiya Payment QR for ₹${payableAmount}`}
-                        className="w-48 h-48 object-contain rounded-xl"
+                        className="w-48 h-48 object-contain rounded-none"
                       />
                       <div className="absolute top-1 left-1 w-3 h-3 border-t-2 border-l-2 border-[#B7202E]" />
                       <div className="absolute top-1 right-1 w-3 h-3 border-t-2 border-r-2 border-[#B7202E]" />
@@ -606,7 +641,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     </p>
                     <p className="text-xs text-[#58595B] leading-relaxed max-w-xs mb-3 font-normal">
                       Scan using Google Pay, PhonePe, Paytm, or any UPI app. Pay exactly{' '}
-                      <strong>₹{payableAmount}</strong> for <strong>{selectedEvent.name}</strong>.
+                      <strong className="text-[#231F20]">₹{payableAmount}</strong> for <strong className="text-[#231F20]">{selectedEvent.name}</strong>.
                     </p>
 
                     {paymentQr.payUrl && (
@@ -621,8 +656,8 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     )}
                   </div>
                 ) : (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 text-left">
-                    <p className="font-semibold mb-1">Payment QR Notice</p>
+                  <div className="bg-amber-50 border border-amber-200 rounded-none p-4 text-xs text-amber-800 text-left">
+                    <p className="font-semibold mb-1">Payment Notice</p>
                     <p>
                       A fee tier of ₹{payableAmount} is required. If the QR code does not load, please contact the organizers.
                     </p>
@@ -631,36 +666,46 @@ export default function RegistrationClient({ events = [], siteConfig }) {
               </div>
             )}
 
-            {/* How Registration Works Strip */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 text-xs text-[#58595B]">
-              <h3 className="font-['Marcellus'] text-base text-[#231F20] mb-3 font-normal">How It Works</h3>
+            {/* Registration Guidelines Strip */}
+            <div className="bg-white border border-[#E5E7EB] rounded-none p-5 text-xs text-[#58595B] shadow-sm">
+              <h3 className="font-['Marcellus'] text-base text-[#231F20] mb-3 font-normal">
+                Registration Guidelines
+              </h3>
               <ol className="space-y-2 list-decimal list-inside leading-relaxed font-normal">
                 <li>Submit your participant and institution credentials.</li>
                 {payableAmount > 0 ? (
                   <>
-                    <li>Scan the Somaiya UPI QR and pay the designated ₹{payableAmount} fee.</li>
+                    <li>Scan the Somaiya UPI QR and complete payment of ₹{payableAmount}.</li>
                     <li>Upload your receipt screenshot and enter the 12-digit UTR ID.</li>
                     <li>Receive your verified digital QR entry pass on submission.</li>
                   </>
                 ) : (
                   <>
-                    <li>Free entry: Instant confirmation pass generated upon submission.</li>
-                    <li>Show your QR pass on mobile during desk check-in at KJSIM.</li>
+                    <li>Complimentary entry: Instant confirmation pass generated upon submission.</li>
+                    <li>Present your QR pass on mobile during desk check-in at KJSIM.</li>
                   </>
                 )}
               </ol>
             </div>
           </div>
 
-          {/* ── RIGHT COLUMN: Registration Form (7 cols) ── */}
+          {/* ── RIGHT COLUMN: Registration Form (7 cols, Clean Somaiya White) ── */}
           <div className="lg:col-span-7">
-            <div className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-9 shadow-xs">
-              <div className="mb-6 pb-4 border-t-0 border-b border-[#E5E7EB]">
+            <div className="bg-white border border-[#E5E7EB] rounded-none p-6 sm:p-9 shadow-xl relative overflow-hidden text-[#231F20]">
+              <div className="w-full h-1.5 bg-[#B7202E] flex absolute top-0 left-0">
+                <div className="w-20 h-full bg-[#ED1C24]" />
+                <div className="flex-1 h-full bg-[#B7202E]" />
+              </div>
+
+              <div className="mb-6 pb-4 border-b border-[#E5E7EB]">
+                <span className="font-mono text-[11px] tracking-widest text-[#B7202E] uppercase block mb-1">
+                  OFFICIAL REGISTRATION // ICON 2026
+                </span>
                 <h2 className="font-['Marcellus'] text-2xl sm:text-3xl text-[#231F20] mb-1 font-normal">
                   Participant Information
                 </h2>
                 <p className="text-[#58595B] text-xs sm:text-sm font-normal">
-                  Please provide valid details. Your venue pass and notifications will be sent to this email and contact number.
+                  Please provide valid details. Your entry pass and notifications will be sent to this email and contact number.
                 </p>
               </div>
 
@@ -672,12 +717,12 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                     >
-                      Full Name <span className="text-[#ED1C24]">*</span>
+                      Full Name <span className="text-[#B7202E]">*</span>
                     </label>
                     <div className="relative">
-                      <HiOutlineUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#58595B]/60 text-base pointer-events-none" />
+                      <HiOutlineUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-base pointer-events-none" />
                       <input
                         id="name"
                         type="text"
@@ -687,7 +732,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                         required
                         disabled={isSubmitting}
                         placeholder="e.g. Karan Sharma"
-                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm text-[#231F20] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -695,12 +740,12 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                     >
-                      Email Address <span className="text-[#ED1C24]">*</span>
+                      Email Address <span className="text-[#B7202E]">*</span>
                     </label>
                     <div className="relative">
-                      <HiOutlineMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#58595B]/60 text-base pointer-events-none" />
+                      <HiOutlineMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-base pointer-events-none" />
                       <input
                         id="email"
                         type="email"
@@ -710,7 +755,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                         required
                         disabled={isSubmitting}
                         placeholder="karan@somaiya.edu"
-                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm text-[#231F20] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -721,12 +766,12 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <div>
                     <label
                       htmlFor="mobile"
-                      className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                     >
-                      10-Digit Mobile <span className="text-[#ED1C24]">*</span>
+                      10-Digit Mobile <span className="text-[#B7202E]">*</span>
                     </label>
                     <div className="relative">
-                      <HiOutlinePhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#58595B]/60 text-base pointer-events-none" />
+                      <HiOutlinePhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-base pointer-events-none" />
                       <input
                         id="mobile"
                         type="tel"
@@ -739,7 +784,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                         maxLength={10}
                         disabled={isSubmitting}
                         placeholder="9876543210"
-                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm text-[#231F20] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -747,12 +792,12 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                   <div>
                     <label
                       htmlFor="college"
-                      className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                     >
-                      College / Institution <span className="text-[#ED1C24]">*</span>
+                      College / Institution <span className="text-[#B7202E]">*</span>
                     </label>
                     <div className="relative">
-                      <HiOutlineAcademicCap className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#58595B]/60 text-base pointer-events-none" />
+                      <HiOutlineAcademicCap className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-base pointer-events-none" />
                       <input
                         id="college"
                         type="text"
@@ -762,7 +807,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                         required
                         disabled={isSubmitting}
                         placeholder="KJ Somaiya Institute of Management"
-                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                        className="w-full pl-10 pr-3.5 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm text-[#231F20] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -772,7 +817,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <div>
                   <label
                     htmlFor="department"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                    className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                   >
                     Department / Stream <span className="text-[#58595B] font-normal">(Optional)</span>
                   </label>
@@ -784,19 +829,19 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     onChange={handleChange}
                     disabled={isSubmitting}
                     placeholder="e.g. Master of Computer Applications (MCA) / Data Science"
-                    className="w-full px-4 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                    className="w-full px-4 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm text-[#231F20] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                   />
                 </div>
 
                 {/* ── Paid Event Verification Inputs ── */}
                 {payableAmount > 0 && (
                   <div className="pt-4 border-t border-[#E5E7EB] space-y-4">
-                    <div className="bg-[#B7202E]/5 border border-[#B7202E]/20 rounded-2xl p-4">
-                      <p className="text-xs font-bold text-[#B7202E] uppercase tracking-wider mb-1">
+                    <div className="bg-[#B7202E]/5 border border-[#B7202E]/20 rounded-none p-4">
+                      <p className="text-xs font-bold text-[#B7202E] uppercase tracking-wider mb-1 font-mono">
                         Fee Payment Verification: ₹{payableAmount}
                       </p>
                       <p className="text-xs text-[#58595B] leading-relaxed">
-                        Scan the QR code displayed in the left column. Upload the transaction receipt and enter the 12-digit UTR number below.
+                        Scan the official Somaiya QR in the left column. Upload the payment receipt and enter the 12-digit UTR transaction ID below.
                       </p>
                     </div>
 
@@ -804,11 +849,11 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     <div>
                       <label
                         htmlFor="paymentScreenshot"
-                        className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                        className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                       >
-                        Payment Screenshot / Slip <span className="text-[#ED1C24]">*</span>
+                        Payment Screenshot / Slip <span className="text-[#B7202E]">*</span>
                       </label>
-                      <div className="relative border-2 border-dashed border-[#E5E7EB] hover:border-[#B7202E]/60 rounded-2xl p-4 text-center bg-[#FAF8F8] transition-colors">
+                      <div className="relative border-2 border-dashed border-[#E5E7EB] hover:border-[#B7202E] rounded-none p-4 text-center bg-[#FAF8F8] transition-colors cursor-pointer">
                         <input
                           id="paymentScreenshot"
                           type="file"
@@ -824,7 +869,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                             <img
                               src={paymentPreview}
                               alt="Payment Preview"
-                              className="w-12 h-12 object-cover rounded-xl border border-[#E5E7EB]"
+                              className="w-12 h-12 object-cover rounded-none border border-[#E5E7EB]"
                             />
                             <div className="text-left text-xs">
                               <p className="font-semibold text-[#231F20] truncate max-w-[200px]">
@@ -837,7 +882,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                           </div>
                         ) : (
                           <div className="flex flex-col items-center justify-center py-2">
-                            <HiOutlineUpload className="text-2xl text-[#58595B]/60 mb-1" />
+                            <HiOutlineUpload className="text-2xl text-[#58595B] mb-1" />
                             <p className="text-xs font-bold text-[#231F20]">
                               Upload Payment Screenshot
                             </p>
@@ -853,9 +898,9 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                     <div>
                       <label
                         htmlFor="paymentTxnId"
-                        className="block text-xs font-bold uppercase tracking-wider text-[#231F20] mb-1.5"
+                        className="block text-xs font-semibold uppercase tracking-wider text-[#231F20] mb-1.5"
                       >
-                        UTR / Transaction Reference ID <span className="text-[#ED1C24]">*</span>
+                        UTR / Transaction Reference ID <span className="text-[#B7202E]">*</span>
                       </label>
                       <input
                         id="paymentTxnId"
@@ -866,18 +911,18 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                         required={payableAmount > 0}
                         disabled={isSubmitting}
                         placeholder="e.g. 423409182390"
-                        className="w-full px-4 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-xl text-sm font-mono uppercase tracking-wider text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-2 focus:ring-[#B7202E]/15 transition-all disabled:opacity-60"
+                        className="w-full px-4 py-3 bg-[#FAF8F8] border border-[#E5E7EB] rounded-none text-sm font-mono uppercase tracking-wider text-[#231F20] focus:outline-none focus:bg-white focus:border-[#B7202E] focus:ring-1 focus:ring-[#B7202E] transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
                 )}
 
                 {/* Submit Action */}
-                <div className="pt-4">
+                <div className="pt-3">
                   <button
                     type="submit"
                     disabled={isSubmitting || (payableAmount > 0 && !paymentQr?.qrImageUrl)}
-                    className="font-['Fira_Sans'] btn-primary w-full justify-center py-4 text-sm sm:text-base font-semibold shadow-md hover:shadow-xl transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="font-['Fira_Sans'] bg-gradient-to-r from-[#B7202E] to-[#ED1C24] hover:from-[#951824] hover:to-[#B7202E] text-white w-full justify-center py-4 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded-none border-0 flex items-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -888,14 +933,14 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                       <>
                         <HiOutlineTicket className="text-lg" />
                         <span>
-                          Submit Entry — {selectedEvent.name} ({feeLabel(payableAmount)})
+                          Submit Registration — {selectedEvent.name} ({feeLabel(payableAmount)})
                         </span>
                       </>
                     )}
                   </button>
 
                   <p className="text-center text-[11px] text-[#58595B] mt-3 leading-relaxed">
-                    By submitting, you agree to comply with Somaiya Vidyavihar University event guidelines. Want to compete in multiple events? Simply register for each event individually.
+                    By submitting, you agree to comply with Somaiya Vidyavihar University event guidelines.
                   </p>
                 </div>
               </form>
@@ -908,7 +953,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
       <AnimatePresence>
         {duplicateModal && (
           <div
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setDuplicateModal(false)}
           >
             <motion.div
@@ -916,10 +961,10 @@ export default function RegistrationClient({ events = [], siteConfig }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white border border-[#E5E7EB] rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden"
+              className="bg-white text-[#231F20] border border-[#E5E7EB] rounded-none max-w-md w-full p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden"
             >
               <div className="w-full h-1.5 bg-amber-500 absolute top-0 left-0" />
-              <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+              <div className="w-14 h-14 rounded-none bg-amber-100 text-amber-600 border border-amber-200 flex items-center justify-center mx-auto mb-4 text-2xl">
                 <HiOutlineExclamation />
               </div>
               <h2 className="font-['Marcellus'] text-2xl sm:text-3xl text-[#231F20] mb-2 font-normal">Already Registered</h2>
@@ -931,13 +976,13 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <button
                   type="button"
                   onClick={() => setDuplicateModal(false)}
-                  className="font-['Fira_Sans'] flex-1 py-3 px-4 rounded-full bg-[#FAF8F8] border border-[#E5E7EB] hover:bg-[#E5E7EB] text-[#231F20] text-sm font-semibold transition-colors cursor-pointer"
+                  className="font-['Fira_Sans'] flex-1 py-3 px-4 rounded-none bg-[#FAF8F8] border border-[#E5E7EB] hover:bg-stone-100 text-[#231F20] text-sm font-semibold transition-colors cursor-pointer"
                 >
                   Dismiss
                 </button>
                 <Link
                   href="/register"
-                  className="font-['Fira_Sans'] btn-primary flex-1 py-3 px-4 text-sm font-semibold rounded-full shadow-xs justify-center"
+                  className="font-['Fira_Sans'] btn-primary flex-1 py-3 px-4 text-sm font-semibold rounded-none shadow-xs justify-center"
                 >
                   Browse Other Events
                 </Link>
@@ -950,14 +995,14 @@ export default function RegistrationClient({ events = [], siteConfig }) {
       {/* ── MODAL: Registration Success & Entry Pass ── */}
       <AnimatePresence>
         {successData && (
-          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.92, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 15 }}
               role="dialog"
               aria-labelledby="reg-success-title"
-              className="bg-white border border-[#E5E7EB] rounded-3xl max-w-lg w-full p-6 sm:p-9 text-center shadow-2xl relative my-8 overflow-hidden"
+              className="bg-white text-[#231F20] border border-[#E5E7EB] rounded-none max-w-lg w-full p-6 sm:p-9 text-center shadow-2xl relative my-8 overflow-hidden"
             >
               {/* Somaiya Red Gradient Top Stripe */}
               <div className="w-full h-2 bg-[#B7202E] flex absolute top-0 left-0">
@@ -965,7 +1010,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <div className="flex-1 h-full bg-[#B7202E]" />
               </div>
 
-              <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-3xl">
+              <div className="w-16 h-16 rounded-none bg-emerald-100 border border-emerald-300 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-3xl">
                 <HiCheckCircle />
               </div>
 
@@ -986,27 +1031,27 @@ export default function RegistrationClient({ events = [], siteConfig }) {
               {/* QR Container */}
               <div
                 ref={qrRef}
-                className="bg-[#FAF8F8] border-2 border-dashed border-[#E5E7EB] rounded-2xl p-4 inline-block mb-3 shadow-inner"
+                className="bg-white border-2 border-[#E5E7EB] rounded-none p-4 inline-block mb-3 shadow-md"
               >
                 <QRCodeSVG
                   value={successData.qrCode}
                   size={160}
                   level="M"
                   includeMargin={true}
-                  className="rounded-xl bg-white p-1"
+                  className="rounded-none bg-white p-1"
                 />
               </div>
 
               {/* Pass ID Pill */}
               <div className="flex items-center justify-center gap-2 mb-4">
-                <span className="font-mono text-xs sm:text-sm font-bold tracking-wider text-[#B7202E] bg-[#B7202E]/10 px-3.5 py-1 rounded-full border border-[#B7202E]/20">
+                <span className="font-mono text-xs sm:text-sm font-bold tracking-wider text-[#B7202E] bg-[#B7202E]/10 px-3.5 py-1 rounded-none border border-[#B7202E]/20">
                   {successData.qrCode}
                 </span>
                 <button
                   type="button"
                   onClick={copyRegId}
                   title="Copy Registration ID"
-                  className="p-1.5 rounded-lg bg-[#FAF8F8] hover:bg-[#E5E7EB] text-[#58595B] transition-colors cursor-pointer border border-[#E5E7EB]"
+                  className="p-1.5 rounded-none bg-[#FAF8F8] hover:bg-stone-100 text-[#58595B] transition-colors cursor-pointer border border-[#E5E7EB]"
                 >
                   {copiedRegId ? <HiCheckCircle className="text-emerald-600" /> : <HiOutlineClipboardCopy />}
                 </button>
@@ -1014,11 +1059,10 @@ export default function RegistrationClient({ events = [], siteConfig }) {
 
               {successData.payableAmount > 0 && (
                 <div className="text-xs text-[#58595B] mb-6 font-['Fira_Sans']">
-                  Amount: <strong className="text-[#231F20]">₹{successData.payableAmount}</strong> · Status:{' '}
+                  Amount: <strong className="text-[#231F20] font-mono">₹{successData.payableAmount}</strong> · Status:{' '}
                   <span
-                    className={`font-semibold capitalize ${
-                      successData.paymentStatus === 'completed' ? 'text-emerald-600' : 'text-amber-600'
-                    }`}
+                    className={`font-semibold capitalize ${successData.paymentStatus === 'completed' ? 'text-emerald-600' : 'text-amber-600'
+                      }`}
                   >
                     {successData.paymentStatus}
                   </span>
@@ -1030,7 +1074,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <button
                   type="button"
                   onClick={downloadQR}
-                  className="font-['Fira_Sans'] btn-primary w-full justify-center py-3 text-sm font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-2"
+                  className="font-['Fira_Sans'] btn-primary w-full justify-center py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2 rounded-none"
                 >
                   <HiOutlineDownload className="text-lg" /> <span>Download QR Pass</span>
                 </button>
@@ -1038,7 +1082,7 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <button
                   type="button"
                   onClick={handleAddToCalendar}
-                  className="w-full py-3 px-4 rounded-full bg-[#FAF8F8] hover:bg-[#E5E7EB] text-[#231F20] text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border border-[#E5E7EB] font-['Fira_Sans']"
+                  className="w-full py-3 px-4 rounded-none bg-[#FAF8F8] hover:bg-stone-100 text-[#231F20] text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border border-[#E5E7EB] font-['Fira_Sans']"
                 >
                   <HiOutlineCalendar className="text-lg text-[#B7202E]" /> <span>Add Event to Calendar</span>
                 </button>
@@ -1046,13 +1090,13 @@ export default function RegistrationClient({ events = [], siteConfig }) {
                 <div className="grid grid-cols-2 gap-2 pt-2">
                   <Link
                     href="/register"
-                    className="py-2.5 px-3 rounded-full border border-[#E5E7EB] hover:border-[#B7202E] text-[#58595B] hover:text-[#B7202E] text-xs font-semibold transition-colors text-center font-['Fira_Sans']"
+                    className="py-2.5 px-3 rounded-none border border-[#E5E7EB] hover:border-[#B7202E] text-[#58595B] hover:text-[#231F20] text-xs font-semibold transition-colors text-center font-['Fira_Sans'] bg-[#FAF8F8]"
                   >
                     Register Another Event
                   </Link>
                   <Link
                     href="/"
-                    className="py-2.5 px-3 rounded-full border border-[#E5E7EB] hover:border-[#B7202E] text-[#58595B] hover:text-[#B7202E] text-xs font-semibold transition-colors text-center font-['Fira_Sans']"
+                    className="py-2.5 px-3 rounded-none border border-[#E5E7EB] hover:border-[#B7202E] text-[#58595B] hover:text-[#231F20] text-xs font-semibold transition-colors text-center font-['Fira_Sans'] bg-[#FAF8F8]"
                   >
                     Back to Homepage
                   </Link>

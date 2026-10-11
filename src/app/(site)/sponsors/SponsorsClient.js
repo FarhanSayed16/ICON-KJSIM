@@ -275,7 +275,7 @@ export default function SponsorsClient() {
               {WHY_SPONSOR_POINTS.map(({ icon: Icon, metric, title, desc }) => (
                 <div
                   key={title}
-                  className="bg-white border border-[#E5E7EB] rounded-3xl p-7 sm:p-8 shadow-xs hover:shadow-xl hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
+                  className="bg-white border border-[#E5E7EB] rounded-none p-7 sm:p-8 shadow-xs hover:shadow-xl hover:border-[#B7202E]/30 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
                 >
                   {/* Somaiya Corner Geometric Device */}
                   <div className="absolute top-0 right-0 w-12 h-12 pointer-events-none overflow-hidden">
@@ -307,7 +307,7 @@ export default function SponsorsClient() {
 
         {/* ── Bottom Partnership CTA (Framed with Somaiya Edge elements) ── */}
         <ScrollReveal>
-          <div className="text-center bg-[#231F20] text-white rounded-3xl p-8 sm:p-14 shadow-xl max-w-4xl mx-auto relative overflow-hidden">
+          <div className="text-center bg-[#231F20] text-white rounded-none p-8 sm:p-14 shadow-xl max-w-4xl mx-auto relative overflow-hidden">
             {/* Somaiya Corner Geometric Device */}
             <div className="absolute top-0 left-0 w-16 h-16 pointer-events-none overflow-hidden">
               <div className="absolute top-0 left-0 w-12 h-2 bg-[#ED1C24]" />

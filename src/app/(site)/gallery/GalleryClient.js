@@ -19,8 +19,8 @@ const DEFAULT_GALLERY = [
   {
     _id: '1',
     src: '/images/gallery/11.webp',
-    alt: 'CodeICON 24-Hour Hackathon Arena',
-    title: 'CodeICON 24-Hour Hackathon Arena',
+    alt: 'CodeICON 12-Hour Hackathon Arena',
+    title: 'CodeICON 12-Hour Hackathon Arena',
     category: 'hackathon',
     edition: 'ICON 2025',
     aspect: 'aspect-[16/10]',
@@ -296,7 +296,7 @@ export default function GalleryClient() {
                 className="break-inside-avoid mb-6 sm:mb-7"
               >
                 <div
-                  className={`group relative ${img.aspect || 'aspect-[4/3]'} w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E5E7EB] bg-white cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl hover:border-[#B7202E]/60 outline-none focus-visible:ring-2 focus-visible:ring-[#B7202E]`}
+                  className={`group relative ${img.aspect || 'aspect-[4/3]'} w-full rounded-none overflow-hidden border border-[#E5E7EB] bg-white cursor-pointer transition-all duration-300 shadow-xs hover:shadow-xl hover:border-[#B7202E]/60 outline-none focus-visible:ring-2 focus-visible:ring-[#B7202E]`}
                   onClick={() => openLightbox(index)}
                   role="button"
                   tabIndex={0}
@@ -355,7 +355,7 @@ export default function GalleryClient() {
 
         {/* ── Archive Experience Ribbon ── */}
         <ScrollReveal delay={0.2}>
-          <div className="mt-16 sm:mt-24 bg-white border border-[#E5E7EB] rounded-3xl p-8 sm:p-10 shadow-xs text-center max-w-4xl mx-auto relative overflow-hidden">
+          <div className="mt-16 sm:mt-24 bg-white border border-[#E5E7EB] rounded-none p-8 sm:p-10 shadow-xs text-center max-w-4xl mx-auto relative overflow-hidden">
             {/* Somaiya Corner Device */}
             <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
               <div className="absolute top-0 right-0 w-12 h-2.5 bg-[#ED1C24]" />
