@@ -7,12 +7,14 @@
     "dev": "next dev",
     "build": "next build && next-sitemap",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node --env-file=.env scripts/seed-content.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
+    "cloudinary": "^2.11.0",
     "dotenv": "^17.4.2",
     "framer-motion": "^13.2.0",
     "html5-qrcode": "^2.3.8",
