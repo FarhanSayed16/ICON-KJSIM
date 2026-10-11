@@ -56,7 +56,13 @@ export default function ContactForm() {
 
         <ScrollReveal>
           <div className={styles.formContainer}>
-            <form action={handleAction} className={styles.form}>
+            <form
+              className={styles.form}
+              onSubmit={async (e) => {
+                e.preventDefault();
+                await handleAction(new FormData(e.currentTarget));
+              }}
+            >
               
               <div className={styles.inputGroup}>
                 <div className={styles.iconWrap}>

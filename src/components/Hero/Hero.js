@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { HiArrowRight, HiOutlineCalendar, HiOutlineLocationMarker, HiOutlineSparkles } from 'react-icons/hi';
 import ParticleBackground from './ParticleBackground';
 import Countdown from '@/components/Countdown/Countdown';
-import { SITE_CONFIG, EVENTS } from '@/lib/data';
+import { SITE_CONFIG } from '@/lib/data';
 import styles from './Hero.module.css';
 
 const containerVariants = {
@@ -25,9 +25,11 @@ const itemVariants = {
   },
 };
 
-const activeEventCount = EVENTS.filter((e) => e.isActive).length;
+export default function Hero({ siteConfig, eventCount }) {
+  const config = siteConfig || SITE_CONFIG;
+  const count = typeof eventCount === 'number' ? eventCount : SITE_CONFIG.stats?.events || 0;
+  const year = (config.edition || config.eventDates?.start || '2026').toString().slice(0, 4) || '2026';
 
-export default function Hero() {
   return (
     <section className={styles.hero} id="hero">
       <ParticleBackground />
@@ -45,15 +47,16 @@ export default function Hero() {
       >
         <motion.h1 variants={itemVariants} className={styles.title}>
           <span className={styles.titleGradient}>ICON</span>
-          <span className={styles.titleYear}>2026</span>
+          <span className={styles.titleYear}>{year}</span>
         </motion.h1>
 
         <motion.p variants={itemVariants} className={styles.tagline}>
-          {SITE_CONFIG.tagline}
+          {config.slogan || config.tagline || SITE_CONFIG.tagline}
         </motion.p>
 
         <motion.p variants={itemVariants} className={styles.subtitle}>
-          {SITE_CONFIG.description} · {SITE_CONFIG.institution}
+          {config.description || SITE_CONFIG.description} ·{' '}
+          {config.institution || SITE_CONFIG.institution}
         </motion.p>
 
         <motion.ul variants={itemVariants} className={styles.highlights}>
@@ -67,12 +70,12 @@ export default function Hero() {
           </li>
           <li>
             <HiOutlineSparkles size={16} aria-hidden />
-            <span>{activeEventCount}+ Events</span>
+            <span>{count}+ Events</span>
           </li>
         </motion.ul>
 
         <motion.div variants={itemVariants} className={styles.countdownWrapper}>
-          <Countdown targetDate={SITE_CONFIG.countdownTarget} />
+          <Countdown targetDate={config.countdownTarget || SITE_CONFIG.countdownTarget} />
         </motion.div>
 
         <motion.div variants={itemVariants} className={styles.ctas}>

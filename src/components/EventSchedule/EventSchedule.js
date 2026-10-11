@@ -4,17 +4,17 @@ import { useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import EventCard from './EventCard';
 import EventModal from './EventModal';
-import { EVENTS, EVENT_CATEGORIES } from '@/lib/data';
+import { EVENT_CATEGORIES } from '@/lib/data';
 import styles from './EventSchedule.module.css';
 
-export default function EventSchedule() {
+export default function EventSchedule({ events = [] }) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const filteredEvents =
     activeCategory === 'all'
-      ? EVENTS.filter((e) => e.isActive)
-      : EVENTS.filter((e) => e.category === activeCategory && e.isActive);
+      ? events.filter((e) => e.isActive)
+      : events.filter((e) => e.category === activeCategory && e.isActive);
 
   return (
     <section className={styles.section} id="events">

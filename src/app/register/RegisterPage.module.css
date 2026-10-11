@@ -110,67 +110,154 @@
   margin-top: 4px;
 }
 
-/* ── Event Selection ── */
-.eventGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--space-md);
-  margin-top: var(--space-md);
+/* ── Event picker (/register) ── */
+.pickerLayout {
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.eventCard {
-  position: relative;
-  background: var(--bg-light);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+.pickerGroup {
+  margin-bottom: var(--space-2xl);
+}
+
+.pickerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-md);
+}
+
+.pickerCard {
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.15rem;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.eventCard:hover {
-  border-color: var(--crimson-light);
-}
-
-.eventCard.selected {
-  background: rgba(183, 28, 28, 0.05);
+.pickerCard:hover {
   border-color: var(--crimson);
+  box-shadow: 0 6px 20px rgba(183, 28, 28, 0.08);
 }
 
-.eventName {
-  font-weight: 600;
+.pickerName {
+  font-weight: 700;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.05rem;
   color: var(--text-primary);
-  margin-bottom: 4px;
 }
 
-.eventCategory {
+.pickerMeta {
   font-size: 0.8rem;
   color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-.checkbox {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--crimson);
-  pointer-events: none; /* Let the card handle the click */
+.pickerFee {
+  margin-top: 0.35rem;
+  font-weight: 800;
+  color: var(--crimson);
+  font-size: 0.95rem;
 }
 
-.selectedCount {
-  display: inline-block;
-  background: var(--crimson);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+/* ── Single-event focus card ── */
+.changeEvent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  margin-left: 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: var(--space-md);
+}
+
+.changeEvent:hover {
+  color: var(--crimson);
+}
+
+.eventFocus {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: var(--space-2xl);
+  background: rgba(183, 28, 28, 0.04);
+  border: 1px solid rgba(183, 28, 28, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.eventFocusLabel {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--crimson);
+}
+
+.eventFocusName {
+  margin: 0.25rem 0 0.35rem;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.eventFocusMeta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.eventFocusFee {
+  flex-shrink: 0;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--crimson);
+}
+
+.paymentBlock {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.qrImage {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.paymentHint {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.paymentWarn {
+  color: #b71c1c;
+  font-size: 14px;
+}
+
+.payLink {
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  text-decoration: none;
 }
 
 /* ── Submit Button ── */
