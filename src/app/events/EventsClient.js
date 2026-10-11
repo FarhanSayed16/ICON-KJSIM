@@ -5,10 +5,10 @@ import { HiSearch } from 'react-icons/hi';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import EventCard from '@/components/EventSchedule/EventCard';
 import EventModal from '@/components/EventSchedule/EventModal';
-import { EVENTS, EVENT_CATEGORIES } from '@/lib/data';
+import { EVENT_CATEGORIES } from '@/lib/data';
 import styles from './Events.module.css';
 
-export default function EventsClient() {
+export default function EventsClient({ events = [] }) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
@@ -16,7 +16,7 @@ export default function EventsClient() {
 
   // Filter and sort events
   const filteredEvents = useMemo(() => {
-    let result = EVENTS.filter((e) => e.isActive);
+    let result = events.filter((e) => e.isActive);
 
     // Filter by category
     if (activeCategory !== 'all') {
@@ -56,7 +56,7 @@ export default function EventsClient() {
     }
 
     return result;
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [events, activeCategory, searchQuery, sortBy]);
 
   return (
     <div className={styles.page}>

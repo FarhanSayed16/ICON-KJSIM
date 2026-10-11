@@ -49,7 +49,13 @@ export default function LoginClient() {
         <h1 className={styles.title}>Admin Portal</h1>
         <p className={styles.subtitle}>Enter the master password to access the dashboard</p>
 
-        <form action={handleAction} className={styles.form}>
+        <form
+          className={styles.form}
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await handleAction(new FormData(e.currentTarget));
+          }}
+        >
           <div className={styles.inputGroup}>
             <label className={styles.label}>Master Password</label>
             <input

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { EVENTS } from '@/lib/data';
 import { broadcastNotification, sendRemindersNow } from '@/app/actions/broadcast';
@@ -54,11 +53,11 @@ export default function BroadcastClient() {
 
   return (
     <div className={styles.dashboard}>
-      <div className={styles.header} style={{ marginBottom: '1.5rem' }}>
-        <h1 className={styles.title}>Broadcast Notifications</h1>
-        <Link href="/admin" className="btn-secondary" style={{ padding: '10px 16px' }}>
-          ← Back to Dashboard
-        </Link>
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Broadcast Notifications</h1>
+          <p className={styles.pageSub}>Send email or SMS to registered participants.</p>
+        </div>
       </div>
 
       <form
