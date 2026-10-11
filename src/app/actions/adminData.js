@@ -1,22 +1,10 @@
 'use server';
 
-import { cookies } from 'next/headers';
-import { jwtVerify } from 'jose';
 import connectDB from '@/lib/mongodb';
 import Registration from '@/models/Registration';
-import { EVENTS } from '@/lib/data';
-
-async function verifyAdmin() {
-  const token = (await cookies()).get('icon_admin_token')?.value;
-  if (!token) throw new Error('Unauthorized');
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    await jwtVerify(token, secret);
-    return true;
-  } catch {
-    throw new Error('Unauthorized');
-  }
-}
+import { verifyAdmin } from '@/lib/adminAuth';
+import { getEvents } from '@/lib/content';
+import { sendRegistrationEmail } from '@/lib/notifications';
 
 function rangeStart(range = 'all') {
   if (range === '7d') return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -45,7 +33,8 @@ export async function getDashboardStats(range = 'all') {
       { $sort: { count: -1 } },
     ]);
 
-    const eventsMap = EVENTS.reduce((acc, evt) => {
+    const allEvents = await getEvents({});
+    const eventsMap = allEvents.reduce((acc, evt) => {
       acc[evt.slug] = evt.name;
       return acc;
     }, {});
@@ -117,7 +106,13 @@ export async function getDashboardStats(range = 'all') {
   }
 }
 
-export async function getRegistrations(page = 1, limit = 10, search = '', event = '') {
+export async function getRegistrations(
+  page = 1,
+  limit = 10,
+  search = '',
+  event = '',
+  paymentStatus = ''
+) {
   await verifyAdmin();
   await connectDB();
 
@@ -129,10 +124,14 @@ export async function getRegistrations(page = 1, limit = 10, search = '', event 
         { email: { $regex: search, $options: 'i' } },
         { qrCode: { $regex: search, $options: 'i' } },
         { mobile: { $regex: search, $options: 'i' } },
+        { paymentTxnId: { $regex: search, $options: 'i' } },
       ];
     }
     if (event) {
       query.events = event;
+    }
+    if (paymentStatus) {
+      query.paymentStatus = paymentStatus;
     }
 
     const skip = (page - 1) * limit;
@@ -185,7 +184,12 @@ export async function exportRegistrationsCsv(event = '') {
     'mobile',
     'college',
     'department',
+    'eventSlug',
     'events',
+    'payableAmount',
+    'paymentStatus',
+    'paymentTxnId',
+    'paymentScreenshotUrl',
     'checkedIn',
     'checkedInAt',
     'createdAt',
@@ -207,7 +211,12 @@ export async function exportRegistrationsCsv(event = '') {
         r.mobile || r.phone || '',
         r.college,
         r.department || '',
+        r.eventSlug || (r.events || [])[0] || '',
         (r.events || []).join('|'),
+        r.payableAmount ?? 0,
+        r.paymentStatus || 'pending',
+        r.paymentTxnId || '',
+        r.paymentScreenshotUrl || '',
         r.checkedIn ? 'yes' : 'no',
         r.checkedInAt ? new Date(r.checkedInAt).toISOString() : '',
         r.createdAt ? new Date(r.createdAt).toISOString() : '',
@@ -218,4 +227,92 @@ export async function exportRegistrationsCsv(event = '') {
   }
 
   return { success: true, csv: lines.join('\n'), filename: 'icon2026-registrations.csv' };
+}
+
+export async function getPaymentStats() {
+  await verifyAdmin();
+  await connectDB();
+  const [pending, verified, rejected] = await Promise.all([
+    Registration.countDocuments({ paymentStatus: 'pending' }),
+    Registration.countDocuments({ paymentStatus: 'verified' }),
+    Registration.countDocuments({ paymentStatus: 'rejected' }),
+  ]);
+  return { success: true, data: { pending, verified, rejected } };
+}
+
+export async function setPaymentStatus(registrationId, status, note = '') {
+  await verifyAdmin();
+  await connectDB();
+
+  if (!['verified', 'rejected', 'pending'].includes(status)) {
+    return { success: false, message: 'Invalid status' };
+  }
+
+  const reg = await Registration.findById(registrationId);
+  if (!reg) return { success: false, message: 'Registration not found' };
+
+  const prev = reg.paymentStatus;
+  reg.paymentStatus = status;
+  reg.paymentNote = String(note || '').slice(0, 500);
+  if (status === 'verified') {
+    reg.paymentVerifiedAt = new Date();
+    reg.paymentVerifiedBy = 'admin';
+  } else {
+    reg.paymentVerifiedAt = null;
+    reg.paymentVerifiedBy = '';
+  }
+  await reg.save();
+
+  let emailStatus = 'skipped';
+  if (status === 'verified' && prev !== 'verified' && !reg.confirmationSent) {
+    try {
+      const emailResult = await sendRegistrationEmail(reg);
+      if (emailResult?.emailStatus === 'sent' || emailResult?.success) {
+        reg.confirmationSent = true;
+        await reg.save();
+        emailStatus = 'sent';
+      } else {
+        emailStatus = emailResult?.emailStatus || 'failed';
+      }
+    } catch (e) {
+      console.error('Confirm email after verify failed:', e.message);
+      emailStatus = 'failed';
+    }
+  }
+
+  return {
+    success: true,
+    message:
+      status === 'verified'
+        ? `Payment verified${emailStatus === 'sent' ? '; confirmation email sent' : ''}`
+        : `Marked as ${status}`,
+    emailStatus,
+  };
+}
+
+export async function getEventOpsSummary() {
+  await verifyAdmin();
+  await connectDB();
+  const events = await getEvents({});
+  const rows = await Promise.all(
+    events.map(async (ev) => {
+      const [total, pending, verified, checkedIn] = await Promise.all([
+        Registration.countDocuments({ events: ev.slug }),
+        Registration.countDocuments({ events: ev.slug, paymentStatus: 'pending' }),
+        Registration.countDocuments({ events: ev.slug, paymentStatus: 'verified' }),
+        Registration.countDocuments({ events: ev.slug, checkedIn: true }),
+      ]);
+      return {
+        slug: ev.slug,
+        name: ev.name,
+        fee: ev.registrationFee,
+        isActive: ev.isActive,
+        total,
+        pending,
+        verified,
+        checkedIn,
+      };
+    })
+  );
+  return { success: true, data: rows };
 }

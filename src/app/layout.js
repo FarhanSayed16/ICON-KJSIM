@@ -2,9 +2,9 @@ import { Outfit, Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import Navbar from '@/components/Navbar/Navbar';
-import Footer from '@/components/Footer/Footer';
+import FooterGate from '@/components/Footer/FooterGate';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
-import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
+import ScrollToTopGate from '@/components/ScrollToTop/ScrollToTopGate';
 import PageTransition from '@/components/PageTransition/PageTransition';
 
 const outfit = Outfit({
@@ -81,6 +81,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${outfit.variable} ${inter.variable} ${spaceGrotesk.variable}`}
     >
       <body suppressHydrationWarning style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
@@ -90,8 +91,8 @@ export default function RootLayout({ children }) {
         <main id="main-content">
           <PageTransition>{children}</PageTransition>
         </main>
-        <Footer />
-        <ScrollToTop />
+        <FooterGate />
+        <ScrollToTopGate />
         <Toaster
           position="top-right"
           toastOptions={{

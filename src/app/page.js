@@ -7,48 +7,53 @@ import Location from '@/components/Location/Location';
 import Brochure from '@/components/Brochure/Brochure';
 import Sponsors from '@/components/Sponsors/Sponsors';
 import ContactForm from '@/components/ContactForm/ContactForm';
-import { SITE_CONFIG } from '@/lib/data';
+import { getEvents, getSiteConfig } from '@/lib/content';
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Event',
-  name: `${SITE_CONFIG.name} — ${SITE_CONFIG.theme}`,
-  description: SITE_CONFIG.description,
-  startDate: SITE_CONFIG.eventDates.start,
-  endDate: SITE_CONFIG.eventDates.end,
-  eventStatus: 'https://schema.org/EventScheduled',
-  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  location: {
-    '@type': 'Place',
-    name: SITE_CONFIG.venue.name,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: SITE_CONFIG.venue.address,
-      addressLocality: 'Mumbai',
-      addressRegion: 'MH',
-      postalCode: '400077',
-      addressCountry: 'IN',
+export default async function Home() {
+  const [siteConfig, events] = await Promise.all([
+    getSiteConfig(),
+    getEvents({ activeOnly: true }),
+  ]);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${siteConfig.name} — ${siteConfig.theme}`,
+    description: siteConfig.description,
+    startDate: siteConfig.eventDates?.start,
+    endDate: siteConfig.eventDates?.end,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: siteConfig.venue?.name,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: siteConfig.venue?.address,
+        addressLocality: 'Mumbai',
+        addressRegion: 'MH',
+        postalCode: '400077',
+        addressCountry: 'IN',
+      },
     },
-  },
-  organizer: {
-    '@type': 'Organization',
-    name: SITE_CONFIG.institution,
-    email: SITE_CONFIG.email,
-  },
-  image: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://icon-kjsim.com'}/og-icon2026.svg`],
-  url: process.env.NEXT_PUBLIC_APP_URL || 'https://icon-kjsim.com',
-};
+    organizer: {
+      '@type': 'Organization',
+      name: siteConfig.institution,
+      email: siteConfig.email,
+    },
+    image: [`${process.env.NEXT_PUBLIC_APP_URL || 'https://icon.somaiya.edu'}/og-icon2026.svg`],
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://icon.somaiya.edu',
+  };
 
-export default function Home() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Hero />
+      <Hero siteConfig={siteConfig} eventCount={events.length} />
       <About />
-      <EventSchedule />
+      <EventSchedule events={events} />
       <StatsBar />
       <GalleryPreview />
       <Location />
