@@ -31,8 +31,9 @@ const emptyForm = {
 const CATEGORIES = [
   { id: 'all', label: 'All' },
   { id: 'technical', label: 'Technical' },
-  { id: 'non-technical', label: 'Non-Technical' },
-  { id: 'gaming', label: 'Gaming' },
+  { id: 'sports', label: 'Sports' },
+  { id: 'gaming', label: 'Indoor & Esports' },
+  { id: 'mini-games', label: 'Mini-Games' },
 ];
 
 export default function AdminEventsClient({ initialEvents }) {
@@ -76,7 +77,9 @@ export default function AdminEventsClient({ initialEvents }) {
       prizePool: ev.prizePool || 0,
       teamSize: ev.teamSize || 'Solo',
       posterImage: ev.posterImage || '',
-      rules: (ev.rules || []).join('\n'),
+      rules: Array.isArray(ev.rules)
+        ? ev.rules.map(String).join('\n')
+        : String(ev.rules || ''),
       pocName: ev.poc?.name || '',
       pocPhone: ev.poc?.phone || '',
       pocEmail: ev.poc?.email || '',
@@ -169,8 +172,9 @@ export default function AdminEventsClient({ initialEvents }) {
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
               >
                 <option value="technical">Technical</option>
-                <option value="non-technical">Non-Technical</option>
-                <option value="gaming">Gaming</option>
+                <option value="sports">Sports</option>
+                <option value="gaming">Indoor & Esports</option>
+                <option value="mini-games">Mini-Games (Free)</option>
               </select>
             </label>
             <label className={styles.field}>

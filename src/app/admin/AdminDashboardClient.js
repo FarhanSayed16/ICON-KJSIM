@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   BarChart,
   Bar,
@@ -130,13 +130,22 @@ export default function AdminDashboardClient({
     [currentPage, searchTerm, eventFilter, paymentFilter, range]
   );
 
+  // Server already rendered the initial data; only refetch when filters really change.
+  const lastFilters = useRef(initialStats ? 'all||' : null);
+  const lastSearch = useRef('');
+
   useEffect(() => {
+    const key = `${range}|${eventFilter}|${paymentFilter}`;
+    if (lastFilters.current === key) return;
+    lastFilters.current = key;
     fetchDashboardData(1, searchTerm, eventFilter, paymentFilter, false);
     setCurrentPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [range, eventFilter, paymentFilter]);
 
   useEffect(() => {
+    if (lastSearch.current === searchTerm) return;
+    lastSearch.current = searchTerm;
     const delay = setTimeout(() => {
       fetchDashboardData(1, searchTerm, eventFilter, paymentFilter, false);
       setCurrentPage(1);
@@ -147,8 +156,9 @@ export default function AdminDashboardClient({
 
   useEffect(() => {
     const id = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       fetchDashboardData(currentPage, searchTerm, eventFilter, paymentFilter, false);
-    }, 30000);
+    }, 60000);
     return () => clearInterval(id);
   }, [fetchDashboardData, currentPage, searchTerm, eventFilter, paymentFilter]);
 

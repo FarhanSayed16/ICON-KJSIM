@@ -6,10 +6,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import styles from './LoadingScreen.module.css';
 
+/**
+ * First-visit splash only. Must default to hidden on SSR — otherwise a failed
+ * JS chunk leaves the overlay stuck forever (blank / unstyled page).
+ */
 export default function LoadingScreen() {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
-  const [isLoading, setIsLoading] = useState(!isAdmin);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isAdmin) {
@@ -17,21 +21,33 @@ export default function LoadingScreen() {
       return undefined;
     }
 
-    // Check if it's the first visit in this session
-    const hasVisited = sessionStorage.getItem('icon_has_visited');
-    
+    let hasVisited = false;
+    try {
+      hasVisited = !!sessionStorage.getItem('icon_has_visited');
+    } catch {
+      hasVisited = true; // can't track — skip splash
+    }
+
     if (hasVisited) {
       setIsLoading(false);
       return undefined;
     }
 
-    // Set visited flag and hide loader after 2.5s
-    sessionStorage.setItem('icon_has_visited', 'true');
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
+    setIsLoading(true);
+    try {
+      sessionStorage.setItem('icon_has_visited', 'true');
+    } catch {
+      /* ignore */
+    }
 
-    return () => clearTimeout(timer);
+    const timer = setTimeout(() => setIsLoading(false), 1800);
+    // Failsafe: never leave the splash up if something goes wrong
+    const failsafe = setTimeout(() => setIsLoading(false), 4000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(failsafe);
+    };
   }, [isAdmin]);
 
   return (
@@ -41,7 +57,7 @@ export default function LoadingScreen() {
           className={styles.loaderOverlay}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
           aria-busy="true"
           aria-label="Loading ICON 2026"
         >
@@ -49,7 +65,7 @@ export default function LoadingScreen() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
             >
               <Image
                 src="/images/icon_logo.png"
@@ -61,26 +77,26 @@ export default function LoadingScreen() {
                 loading="eager"
               />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               className={styles.progressContainer}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
+              transition={{ delay: 0.35, duration: 0.4 }}
             >
-              <motion.div 
+              <motion.div
                 className={styles.progressBar}
                 initial={{ width: '0%' }}
                 animate={{ width: '100%' }}
-                transition={{ duration: 2, ease: 'easeInOut' }}
+                transition={{ duration: 1.5, ease: 'easeInOut' }}
               />
             </motion.div>
-            
-            <motion.p 
+
+            <motion.p
               className={styles.loadingText}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
             >
               INITIALIZING DATATRON...
             </motion.p>

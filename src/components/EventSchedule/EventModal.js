@@ -63,8 +63,14 @@ export default function EventModal({ event, onClose }) {
                 />
               </div>
             </div>
-            <span className={`${styles.categoryBadge} ${styles[event.category.replace('-', '')]}`}>
-              {event.category}
+            <span
+              className={`${styles.categoryBadge} ${styles[String(event.category || '').replace(/-/g, '')] || ''}`}
+            >
+              {event.category === 'mini-games'
+                ? 'Mini-Game'
+                : event.category === 'gaming'
+                  ? 'Indoor & Esports'
+                  : event.category}
             </span>
             <h2 className={styles.modalTitle}>{event.name}</h2>
             <p className={styles.modalShort}>{event.shortDesc}</p>
@@ -73,6 +79,14 @@ export default function EventModal({ event, onClose }) {
           {/* Body */}
           <div className={styles.modalBody}>
             <p className={styles.modalDesc}>{event.description}</p>
+
+            {Array.isArray(event.includes) && event.includes.length > 0 && (
+              <ul className={styles.includesList}>
+                {event.includes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            )}
 
             {/* Info Grid */}
             <div className={styles.infoGrid}>

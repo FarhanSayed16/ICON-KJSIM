@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { HiOutlineLogout, HiExternalLink } from 'react-icons/hi';
-import toast from 'react-hot-toast';
 import { logoutAdmin } from '@/app/actions/adminAuth';
 import styles from './AdminShell.module.css';
 
@@ -16,7 +15,6 @@ const NAV = [
 
 export default function AdminShell({ children }) {
   const pathname = usePathname();
-  const router = useRouter();
   const isLogin = pathname?.startsWith('/admin/login');
 
   if (isLogin) {
@@ -24,9 +22,13 @@ export default function AdminShell({ children }) {
   }
 
   const handleLogout = async () => {
-    await logoutAdmin();
-    router.push('/admin/login');
-    toast.success('Logged out');
+    try {
+      await logoutAdmin();
+    } catch {
+      /* still leave the session UI */
+    }
+    // Full navigation clears RSC/router cache so login page actually shows
+    window.location.assign('/admin/login');
   };
 
   return (

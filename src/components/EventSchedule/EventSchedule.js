@@ -22,7 +22,7 @@ export default function EventSchedule({ events = [] }) {
         <ScrollReveal>
           <div className="section-heading">
             <h2>Event Schedule</h2>
-            <p>Explore our lineup of technical, non-technical &amp; gaming events</p>
+            <p>ICON 2026 Event List — technical, sports, indoor &amp; esports, mini-games</p>
             <span className="accent-line" />
           </div>
         </ScrollReveal>

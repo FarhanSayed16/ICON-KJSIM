@@ -22,7 +22,7 @@ const EventSchema = new mongoose.Schema(
     edition: { type: String, default: '2026', index: true },
     category: {
       type: String,
-      enum: ['technical', 'non-technical', 'gaming'],
+      enum: ['technical', 'sports', 'gaming', 'mini-games', 'non-technical'],
       required: true,
     },
     shortDesc: { type: String, default: '', maxlength: 300 },
@@ -36,6 +36,8 @@ const EventSchema = new mongoose.Schema(
     maxParticipants: { type: Number, default: null },
     posterImage: { type: String, default: '' },
     rules: { type: [String], default: [] },
+    /** Nested titles under a category item (e.g. Gaming → Clash Royale) */
+    includes: { type: [String], default: [] },
     poc: { type: PocSchema, default: () => ({}) },
     isActive: { type: Boolean, default: true, index: true },
     isRegistrationOpen: { type: Boolean, default: true },

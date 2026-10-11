@@ -9,8 +9,13 @@ import { revalidatePath } from 'next/cache';
 
 export async function getAdminSiteConfig() {
   await verifyAdmin();
-  const config = await getSiteConfig();
-  return { success: true, config };
+  try {
+    const config = await getSiteConfig();
+    return { success: true, config };
+  } catch (err) {
+    console.error('getAdminSiteConfig:', err);
+    return { success: false, message: 'Failed to load settings', config: null };
+  }
 }
 
 export async function saveSiteConfig(formData) {

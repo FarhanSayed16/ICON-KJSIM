@@ -110,12 +110,20 @@
   background: linear-gradient(145deg, #eef4ff 0%, #f5f0ff 55%, #ffffff 100%);
 }
 
-.stage_nontechnical {
-  background: linear-gradient(145deg, #eefaf0 0%, #fff8f5 55%, #ffffff 100%);
+.stage_sports {
+  background: linear-gradient(145deg, #e8f7ef 0%, #fff8f0 55%, #ffffff 100%);
 }
 
 .stage_gaming {
   background: linear-gradient(145deg, #fff4ec 0%, #fff0f0 50%, #ffffff 100%);
+}
+
+.stage_minigames {
+  background: linear-gradient(145deg, #fff8e8 0%, #f3f8ff 55%, #ffffff 100%);
+}
+
+.stage_nontechnical {
+  background: linear-gradient(145deg, #eefaf0 0%, #fff8f5 55%, #ffffff 100%);
 }
 
 .posterStage {
@@ -158,7 +166,7 @@
   border: none;
 }
 
-.nontechnical {
+.sports {
   background: #2E7D32;
   color: #fff;
   border: none;
@@ -170,12 +178,38 @@
   border: none;
 }
 
+.minigames {
+  background: #6A1B9A;
+  color: #fff;
+  border: none;
+}
+
+.nontechnical {
+  background: #546E7A;
+  color: #fff;
+  border: none;
+}
+
 .cardContent {
   padding: 1rem 1.15rem 1.25rem;
   display: flex;
   flex-direction: column;
   flex: 1;
   background: #fff;
+}
+
+.includesList {
+  list-style: disc;
+  margin: 0.35rem 0 0.65rem 1.1rem;
+  padding: 0;
+  text-align: left;
+  color: var(--text-secondary, #555);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.includesList li {
+  margin: 0.1rem 0;
 }
 
 .cardTitle {
@@ -355,7 +389,12 @@
   font-size: 0.92rem;
   line-height: 1.8;
   color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.modalBody .includesList {
   margin-bottom: var(--space-xl);
+  font-size: 0.9rem;
 }
 
 .infoGrid {

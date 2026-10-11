@@ -6,22 +6,29 @@ import {
   getPaymentStats,
 } from '@/app/actions/adminData';
 import { getEvents } from '@/lib/content';
+import { toPlain } from '@/lib/plain';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Admin Dashboard | ICON' };
 
-/** Ensure props are plain JSON (no Date/ObjectId) for RSC client boundary. */
-function toPlain(value) {
-  return JSON.parse(JSON.stringify(value ?? null));
-}
-
 export default async function AdminPage() {
-  const [statsRes, regsRes, events, opsRes, payRes] = await Promise.all([
-    getDashboardStats(),
-    getRegistrations(1, 15, '', '', ''),
-    getEvents({}),
-    getEventOpsSummary(),
-    getPaymentStats(),
-  ]);
+  let statsRes, regsRes, events, opsRes, payRes;
+  try {
+    [statsRes, regsRes, events, opsRes, payRes] = await Promise.all([
+      getDashboardStats(),
+      getRegistrations(1, 15, '', '', ''),
+      getEvents({}),
+      getEventOpsSummary(),
+      getPaymentStats(),
+    ]);
+  } catch (err) {
+    console.error('Admin page data fetch error:', err);
+    statsRes = { success: false };
+    regsRes = { success: false };
+    events = [];
+    opsRes = { success: false };
+    payRes = { success: false };
+  }
 
   const stats = toPlain(
     statsRes.success

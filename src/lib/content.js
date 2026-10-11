@@ -9,27 +9,35 @@ function serializeEvent(doc) {
   if (!doc) return null;
   const e = typeof doc.toObject === 'function' ? doc.toObject() : doc;
   return {
-    _id: e._id?.toString?.() || e._id || undefined,
-    name: e.name,
-    slug: e.slug,
-    edition: e.edition || DEFAULT_EDITION,
-    category: e.category,
-    shortDesc: e.shortDesc || '',
-    description: e.description || '',
-    date: e.date || '',
-    time: e.time || '',
-    venue: e.venue || '',
+    _id: e._id != null ? String(e._id) : undefined,
+    name: String(e.name || ''),
+    slug: String(e.slug || ''),
+    edition: String(e.edition || DEFAULT_EDITION),
+    category: String(e.category || 'technical'),
+    shortDesc: String(e.shortDesc || ''),
+    description: String(e.description || ''),
+    date: String(e.date || ''),
+    time: String(e.time || ''),
+    venue: String(e.venue || ''),
     registrationFee: Number(e.registrationFee) || 0,
     prizePool: Number(e.prizePool) || 0,
-    teamSize: e.teamSize || 'Solo',
-    maxParticipants: e.maxParticipants ?? null,
-    posterImage: e.posterImage || '',
-    rules: Array.isArray(e.rules) ? e.rules : [],
-    poc: e.poc || { name: '', phone: '', email: '' },
+    teamSize: String(e.teamSize || 'Solo'),
+    maxParticipants:
+      e.maxParticipants == null || e.maxParticipants === ''
+        ? null
+        : Number(e.maxParticipants),
+    posterImage: String(e.posterImage || ''),
+    rules: Array.isArray(e.rules) ? e.rules.map((r) => String(r ?? '')) : [],
+    includes: Array.isArray(e.includes) ? e.includes.map((r) => String(r ?? '')) : [],
+    poc: {
+      name: String(e.poc?.name || ''),
+      phone: String(e.poc?.phone || ''),
+      email: String(e.poc?.email || ''),
+    },
     isActive: e.isActive !== false,
     isRegistrationOpen: e.isRegistrationOpen !== false,
-    sortOrder: e.sortOrder ?? 0,
-    streamUrl: e.streamUrl ?? null,
+    sortOrder: Number(e.sortOrder) || 0,
+    streamUrl: e.streamUrl ? String(e.streamUrl) : null,
     isLive: !!e.isLive,
   };
 }
@@ -106,16 +114,58 @@ export async function getSiteConfig(edition = DEFAULT_EDITION) {
     await connectDB();
     const doc = await SiteConfig.findOne({ key: 'default' }).lean();
     if (!doc) return fallbackSiteConfig();
+    const base = fallbackSiteConfig();
+    // Never spread raw lean() doc — ObjectIds / Dates break RSC client props
     return {
-      ...fallbackSiteConfig(),
-      ...doc,
-      _id: doc._id?.toString?.(),
-      edition: doc.edition || edition,
-      eventDates: doc.eventDates || fallbackSiteConfig().eventDates,
-      venue: doc.venue || fallbackSiteConfig().venue,
-      socials: doc.socials || fallbackSiteConfig().socials,
-      stats: doc.stats || fallbackSiteConfig().stats,
-      paymentQrs: Array.isArray(doc.paymentQrs) ? doc.paymentQrs : [],
+      ...base,
+      _id: doc._id != null ? String(doc._id) : undefined,
+      key: 'default',
+      edition: String(doc.edition || edition),
+      name: String(doc.name ?? base.name),
+      theme: String(doc.theme ?? base.theme),
+      slogan: String(doc.slogan ?? ''),
+      tagline: String(doc.tagline ?? base.tagline),
+      description: String(doc.description ?? base.description),
+      institution: String(doc.institution ?? base.institution),
+      university: String(doc.university ?? base.university),
+      eventDates: {
+        start: String(doc.eventDates?.start ?? base.eventDates.start),
+        end: String(doc.eventDates?.end ?? base.eventDates.end),
+      },
+      countdownTarget: String(doc.countdownTarget ?? base.countdownTarget),
+      venue: {
+        name: String(doc.venue?.name ?? base.venue.name),
+        address: String(doc.venue?.address ?? base.venue.address),
+        mapsQuery: String(doc.venue?.mapsQuery ?? base.venue.mapsQuery),
+        mapsEmbed: String(doc.venue?.mapsEmbed ?? base.venue.mapsEmbed),
+      },
+      contacts: Array.isArray(doc.contacts)
+        ? doc.contacts.map((c) => ({
+            name: String(c?.name || ''),
+            phone: String(c?.phone || ''),
+          }))
+        : base.contacts,
+      email: String(doc.email ?? base.email),
+      socials: {
+        facebook: String(doc.socials?.facebook ?? base.socials.facebook),
+        instagram: String(doc.socials?.instagram ?? base.socials.instagram),
+        linkedin: String(doc.socials?.linkedin ?? base.socials.linkedin),
+      },
+      stats: {
+        participants: Number(doc.stats?.participants ?? base.stats.participants) || 0,
+        events: Number(doc.stats?.events ?? base.stats.events) || 0,
+        prizePool: Number(doc.stats?.prizePool ?? base.stats.prizePool) || 0,
+        colleges: Number(doc.stats?.colleges ?? base.stats.colleges) || 0,
+      },
+      registrationOpen: doc.registrationOpen !== false,
+      paymentQrs: Array.isArray(doc.paymentQrs)
+        ? doc.paymentQrs.map((q) => ({
+            amount: Number(q?.amount) || 0,
+            label: String(q?.label || ''),
+            qrImageUrl: String(q?.qrImageUrl || ''),
+            payUrl: String(q?.payUrl || ''),
+          }))
+        : [],
     };
   } catch (err) {
     console.warn('[content.getSiteConfig] falling back to static data:', err.message);

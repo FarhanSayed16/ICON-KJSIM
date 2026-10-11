@@ -11,13 +11,16 @@ import { HiOutlineTrophy } from 'react-icons/hi2';
 import styles from './EventSchedule.module.css';
 
 function categoryKey(category) {
-  return category.replace('-', '');
+  return String(category || '').replace(/-/g, '');
 }
 
 function categoryLabel(category) {
-  if (category === 'non-technical') return 'Non-Tech';
   if (category === 'technical') return 'Tech';
-  return 'Gaming';
+  if (category === 'sports') return 'Sports';
+  if (category === 'mini-games') return 'Mini-Game';
+  if (category === 'gaming') return 'Esports';
+  if (category === 'non-technical') return 'Non-Tech';
+  return category || 'Event';
 }
 
 export default function EventCard({ event, onClick }) {
@@ -49,6 +52,13 @@ export default function EventCard({ event, onClick }) {
       <div className={styles.cardContent}>
         <h3 className={styles.cardTitle}>{event.name}</h3>
         <p className={styles.cardDesc}>{event.shortDesc}</p>
+        {Array.isArray(event.includes) && event.includes.length > 0 && (
+          <ul className={styles.includesList}>
+            {event.includes.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        )}
 
         <div className={styles.cardMeta}>
           <div className={styles.metaItem}>

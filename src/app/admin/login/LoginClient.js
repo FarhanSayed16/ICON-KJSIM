@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { loginAdmin } from '@/app/actions/adminAuth';
 import styles from './LoginClient.module.css';
 
 export default function LoginClient() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAction = async (formData) => {
@@ -19,13 +17,11 @@ export default function LoginClient() {
       
       if (result.success) {
         toast.success('Access Granted');
-        // Small delay so user sees the success toast
-        setTimeout(() => {
-          router.push('/admin');
-        }, 1000);
+        // Full navigation so proxy + cookie are applied cleanly
+        window.location.assign('/admin');
       } else {
         toast.error(result.message || 'Invalid credentials');
-        setIsSubmitting(false); // only re-enable on failure
+        setIsSubmitting(false);
       }
     } catch (error) {
       toast.error('An error occurred');

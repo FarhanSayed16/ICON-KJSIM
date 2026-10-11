@@ -1,5 +1,6 @@
 import BroadcastClient from './BroadcastClient';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Broadcast Notifications' };
 
 export default function BroadcastPage() {
