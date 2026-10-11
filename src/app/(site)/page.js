@@ -1,12 +1,11 @@
 import Hero from '@/components/Hero/Hero';
 import About from '@/components/About/About';
-import StatsBar from '@/components/About/StatsBar';
 import EventSchedule from '@/components/EventSchedule/EventSchedule';
 import GalleryPreview from '@/components/GalleryPreview/GalleryPreview';
 import Location from '@/components/Location/Location';
-import Brochure from '@/components/Brochure/Brochure';
 import Sponsors from '@/components/Sponsors/Sponsors';
 import ContactForm from '@/components/ContactForm/ContactForm';
+import RegistrationBanner from '@/components/RegistrationBanner/RegistrationBanner';
 import { getEvents, getSiteConfig } from '@/lib/content';
 
 export default async function Home() {
@@ -54,12 +53,11 @@ export default async function Home() {
       <Hero siteConfig={siteConfig} eventCount={events.length} />
       <About />
       <EventSchedule events={events} />
-      <StatsBar />
       <GalleryPreview />
       <Location />
-      <Brochure />
       <Sponsors />
       <ContactForm />
+      <RegistrationBanner />
     </>
   );
 }

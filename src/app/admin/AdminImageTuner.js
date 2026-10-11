@@ -334,7 +334,7 @@ export default function AdminImageTuner() {
             background: '#1a1a2e', borderRadius: '8px', padding: '0.65rem 0.85rem',
             fontFamily: 'monospace', fontSize: '0.78rem', color: '#e0e0e0', lineHeight: 1.6, marginTop: 'auto',
           }}>
-            <div style={{ color: '#666' }}>/* {selected?.name} */</div>
+            <div style={{ color: '#666' }}>{`/* ${selected?.name || ''} */`}</div>
             <div>object-position: <span style={{ color: '#51cf66' }}>{adj.posX}% {adj.posY}%</span>;</div>
             {adj.zoom !== 100 && <div>transform: scale(<span style={{ color: '#51cf66' }}>{(adj.zoom / 100).toFixed(2)}</span>);</div>}
           </div>
@@ -348,7 +348,7 @@ export default function AdminImageTuner() {
           padding: '0.85rem 1.25rem', fontFamily: 'monospace', fontSize: '0.8rem', lineHeight: 1.8, marginTop: '1.25rem',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-            <span style={{ color: '#666' }}>/* All changes — Copy & paste to chat */</span>
+            <span style={{ color: '#666' }}>{"/* All changes — Copy & paste to chat */"}</span>
             <button onClick={copyValues} style={{
               background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff', padding: '3px 10px',
               borderRadius: '5px', cursor: 'pointer', fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '4px',

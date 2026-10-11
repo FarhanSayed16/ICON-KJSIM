@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="svuGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#B7202E"/>
+      <stop offset="100%" stop-color="#ED1C24"/>
+    </linearGradient>
+  </defs>
+  <!-- Somaiya Sun / Flame Crest -->
+  <g transform="translate(24, 18)">
+    <rect width="84" height="84" rx="20" fill="#B7202E" fill-opacity="0.08" stroke="#B7202E" stroke-width="1.5"/>
+    <circle cx="42" cy="42" r="22" fill="none" stroke="url(#svuGrad)" stroke-width="4"/>
+    <path d="M42 26 L42 58 M26 42 L58 42 M31 31 L53 53 M31 53 L53 31" stroke="#B7202E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="42" cy="42" r="6" fill="#ED1C24"/>
+  </g>
+  <!-- Text -->
+  <text x="126" y="60" font-family="'Marcellus', Georgia, serif" font-size="30" font-weight="600" fill="#231F20" letter-spacing="1">SOMAIYA TRUST</text>
+  <text x="128" y="84" font-family="'Fira Sans', -apple-system, sans-serif" font-size="11" font-weight="700" fill="#B7202E" letter-spacing="2.5">INSTITUTIONAL PATRON</text>
+</svg>

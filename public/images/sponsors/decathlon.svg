@@ -1,5 +1,17 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="600" height="240" viewBox="0 0 600 240">
-  <rect width="600" height="240" rx="16" fill="#111827"/>
-  <rect x="8" y="8" width="584" height="224" rx="12" fill="#1565C0" opacity="0.9"/>
-  <text x="300" y="130" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="700">Decathlon</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="decGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0082C3"/>
+      <stop offset="100%" stop-color="#005B94"/>
+    </linearGradient>
+  </defs>
+  <!-- Sport Icon -->
+  <g transform="translate(24, 18)">
+    <rect width="84" height="84" rx="20" fill="#0082C3" fill-opacity="0.08" stroke="#0082C3" stroke-width="1.5"/>
+    <path d="M26 62 L42 26 L58 62 Z" fill="none" stroke="url(#decGrad)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="42" cy="48" r="7" fill="#0082C3"/>
+  </g>
+  <!-- Text -->
+  <text x="126" y="62" font-family="'Fira Sans', -apple-system, sans-serif" font-size="36" font-weight="900" fill="#0082C3" letter-spacing="1">DECATHLON</text>
+  <text x="128" y="86" font-family="'Fira Sans', -apple-system, sans-serif" font-size="12" font-weight="700" fill="#58595B" letter-spacing="3">OFFICIAL SPORTS PARTNER</text>
 </svg>

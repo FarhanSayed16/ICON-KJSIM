@@ -3,36 +3,18 @@ import { HiOutlineEmojiSad } from 'react-icons/hi';
 
 export default function NotFound() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'var(--bg-dark)',
-      color: 'var(--text-white)',
-      padding: 'var(--space-2xl) var(--space-xl)',
-      textAlign: 'center'
-    }}>
-      <HiOutlineEmojiSad size={80} style={{ color: 'var(--crimson)', marginBottom: 'var(--space-lg)' }} />
-      <h1 style={{ 
-        fontFamily: 'var(--font-outfit), sans-serif', 
-        fontSize: '4rem', 
-        lineHeight: 1,
-        marginBottom: 'var(--space-md)' 
-      }}>404</h1>
-      <h2 style={{ 
-        fontFamily: 'var(--font-outfit), sans-serif', 
-        fontSize: '1.5rem', 
-        marginBottom: 'var(--space-xl)',
-        color: 'rgba(255,255,255,0.7)'
-      }}>Page Not Found</h2>
-      
-      <p style={{ maxWidth: '400px', marginBottom: 'var(--space-2xl)', color: 'rgba(255,255,255,0.5)' }}>
-        The data you are looking for has been corrupted or moved to a different node in the Datatron.
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a1a2e] text-white p-8 text-center font-firasans">
+      <HiOutlineEmojiSad className="text-7xl text-[#ED1C24] mb-6 animate-pulse" />
+      <h1 className="font-marcellus text-6xl sm:text-7xl mb-2 text-white">404</h1>
+      <h2 className="font-marcellus text-2xl text-white/80 mb-4">Page Not Found</h2>
+      <p className="max-w-md mb-8 text-white/60 text-sm leading-relaxed">
+        The data or arena you are looking for does not exist in the ICON Datatron network.
       </p>
 
-      <Link href="/" className="btn-primary">
+      <Link
+        href="/"
+        className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-[#B7202E] to-[#ED1C24] hover:from-[#9B1925] hover:to-[#B7202E] text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-xl transition-all cursor-pointer"
+      >
         Return to Core (Home)
       </Link>
     </div>

@@ -1,5 +1,22 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" width="600" height="240" viewBox="0 0 600 240">
-  <rect width="600" height="240" rx="16" fill="#111827"/>
-  <rect x="8" y="8" width="584" height="224" rx="12" fill="#C62828" opacity="0.9"/>
-  <text x="300" y="130" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="700">TechNova</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="tnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ED1C24"/>
+      <stop offset="100%" stop-color="#B7202E"/>
+    </linearGradient>
+    <linearGradient id="tnGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#231F20"/>
+      <stop offset="100%" stop-color="#383335"/>
+    </linearGradient>
+  </defs>
+  <!-- Monogram Icon -->
+  <g transform="translate(24, 18)">
+    <rect width="84" height="84" rx="20" fill="url(#tnGlow)" stroke="#B7202E" stroke-width="2" stroke-opacity="0.4"/>
+    <path d="M22 28 L62 28 M42 28 L42 64" stroke="url(#tnGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="58" cy="34" r="5" fill="#ED1C24"/>
+    <circle cx="26" cy="58" r="4" fill="#B7202E"/>
+  </g>
+  <!-- Brand Text -->
+  <text x="128" y="62" font-family="'Marcellus', Georgia, serif" font-size="34" font-weight="600" fill="#231F20" letter-spacing="1.5">TECHNOVA</text>
+  <text x="130" y="86" font-family="'Fira Sans', -apple-system, sans-serif" font-size="12" font-weight="700" fill="#ED1C24" letter-spacing="3.5">AI &amp; CLOUD SYSTEMS</text>
 </svg>
