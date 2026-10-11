@@ -14,8 +14,11 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
 
   useEffect(() => {
+    if (isAdmin) return undefined;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -34,17 +37,18 @@ export default function Navbar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isAdmin]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
+    if (isAdmin) return undefined;
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+  }, [isOpen, isAdmin]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -56,6 +60,8 @@ export default function Navbar() {
     if (href.startsWith('/#')) return pathname === '/';
     return pathname.startsWith(href);
   };
+
+  if (isAdmin) return null;
 
   return (
     <header

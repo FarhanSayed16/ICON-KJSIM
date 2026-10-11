@@ -1,20 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import styles from './LoadingScreen.module.css';
 
 export default function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
+  const [isLoading, setIsLoading] = useState(!isAdmin);
 
   useEffect(() => {
+    if (isAdmin) {
+      setIsLoading(false);
+      return undefined;
+    }
+
     // Check if it's the first visit in this session
     const hasVisited = sessionStorage.getItem('icon_has_visited');
     
     if (hasVisited) {
       setIsLoading(false);
-      return;
+      return undefined;
     }
 
     // Set visited flag and hide loader after 2.5s
@@ -24,7 +32,7 @@ export default function LoadingScreen() {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isAdmin]);
 
   return (
     <AnimatePresence>

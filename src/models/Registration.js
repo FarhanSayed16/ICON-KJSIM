@@ -11,13 +11,13 @@ const RegistrationSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, 'Please provide an email'],
-      unique: true,
       match: [
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
         'Please add a valid email',
       ],
       lowercase: true,
       trim: true,
+      index: true,
     },
     // Canonical field name aligned with master plan
     mobile: {
@@ -36,6 +36,14 @@ const RegistrationSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    /** Single event this registration is for (one payment / one QR per reg). */
+    eventSlug: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true,
+    },
+    /** Kept as [eventSlug] for admin filters / CSV compatibility. */
     events: {
       type: [String],
       required: true,
@@ -74,14 +82,78 @@ const RegistrationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    edition: {
+      type: String,
+      default: '2026',
+      index: true,
+    },
+    payableAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    paymentScreenshotUrl: {
+      type: String,
+      default: '',
+    },
+    paymentTxnId: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['pending', 'verified', 'rejected', 'not_required'],
+      default: 'pending',
+      index: true,
+    },
+    paymentVerifiedAt: {
+      type: Date,
+      default: null,
+    },
+    paymentVerifiedBy: {
+      type: String,
+      default: '',
+    },
+    paymentNote: {
+      type: String,
+      default: '',
+      maxlength: 500,
+    },
   },
   {
     timestamps: true,
   }
 );
 
+RegistrationSchema.pre('validate', function syncEventFields(next) {
+  if (!this.eventSlug && this.events?.[0]) {
+    this.eventSlug = this.events[0];
+  }
+  if (this.eventSlug) {
+    this.events = [this.eventSlug];
+  }
+  next();
+});
+
 RegistrationSchema.index({ mobile: 1 });
 RegistrationSchema.index({ createdAt: -1 });
+// Same person may register for multiple events — but only once per event
+RegistrationSchema.index(
+  { email: 1, eventSlug: 1, edition: 1 },
+  { unique: true }
+);
+RegistrationSchema.index(
+  { paymentTxnId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { paymentTxnId: { $type: 'string', $gt: '' } },
+  }
+);
 
-export default mongoose.models.Registration ||
-  mongoose.model('Registration', RegistrationSchema);
+// Hot-reload can keep a stale schema (e.g. old unique email). Prefer fresh model in dev.
+if (mongoose.models.Registration) {
+  delete mongoose.models.Registration;
+}
+
+export default mongoose.model('Registration', RegistrationSchema);
