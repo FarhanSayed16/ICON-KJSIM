@@ -1,0 +1,166 @@
+.page {
+  padding-top: calc(80px + var(--space-4xl));
+  padding-bottom: var(--space-5xl);
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-4xl);
+}
+
+.title {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* ── Tiers ── */
+.tierSection {
+  margin-bottom: var(--space-4xl);
+}
+
+.tierHeading {
+  text-align: center;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--crimson);
+  margin-bottom: var(--space-2xl);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.tierHeading::before,
+.tierHeading::after {
+  content: '';
+  height: 2px;
+  flex: 1;
+  max-width: 100px;
+  background: var(--border-medium);
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xl);
+}
+
+/* Title Sponsor gets a larger treatment */
+.tierSection[data-tier="Title Sponsor"] .grid {
+  gap: var(--space-2xl);
+}
+
+.tierSection[data-tier="Title Sponsor"] .sponsorCard {
+  width: 100%;
+  max-width: 500px;
+}
+
+.sponsorCard {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.sponsorCard:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-medium);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.logoWrap {
+  width: 100%;
+  height: 120px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+/* Title sponsor logo size */
+.tierSection[data-tier="Title Sponsor"] .logoWrap {
+  height: 200px;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.8);
+  transition: all var(--transition-base);
+}
+
+.sponsorCard:hover .logo {
+  filter: grayscale(0%) opacity(1);
+}
+
+.name {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tierName {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+/* ── CTA ── */
+.ctaSection {
+  margin-top: var(--space-5xl);
+  text-align: center;
+  background: var(--bg-white);
+  padding: var(--space-3xl) var(--space-lg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+}
+
+.ctaSection h3 {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.ctaSection p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .page {
+    padding-top: calc(70px + var(--space-2xl));
+  }
+  .tierHeading::before,
+  .tierHeading::after {
+    max-width: 50px;
+  }
+}

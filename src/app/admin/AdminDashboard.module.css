@@ -4,6 +4,16 @@
   gap: 1.1rem;
 }
 
+.spin {
+  animation: adminSpin 1s linear infinite;
+}
+
+@keyframes adminSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .pageHeader {
   display: flex;
   justify-content: space-between;

@@ -149,19 +149,30 @@ export async function getRegistrations(
       Registration.countDocuments(query),
     ]);
 
+    // Explicit plain fields only — never spread lean() docs (breaks RSC / Turbopack)
     const serializedRegistrations = registrations.map((reg) => ({
-      ...reg,
-      _id: reg._id.toString(),
-      createdAt: reg.createdAt?.toISOString?.() || null,
-      updatedAt: reg.updatedAt?.toISOString?.() || null,
-      checkedInAt: reg.checkedInAt ? reg.checkedInAt.toISOString() : null,
-      paymentVerifiedAt: reg.paymentVerifiedAt
-        ? reg.paymentVerifiedAt.toISOString()
-        : null,
-      eventSlug: reg.eventSlug || (reg.events || [])[0] || '',
-      events: reg.events || [],
-      // Back-compat for older docs that stored `phone`
+      _id: String(reg._id),
+      name: reg.name || '',
+      email: reg.email || '',
       mobile: reg.mobile || reg.phone || '',
+      college: reg.college || '',
+      department: reg.department || '',
+      eventSlug: reg.eventSlug || (reg.events || [])[0] || '',
+      events: Array.isArray(reg.events) ? reg.events.map(String) : [],
+      qrCode: reg.qrCode || '',
+      payableAmount: Number(reg.payableAmount) || 0,
+      paymentStatus: reg.paymentStatus || 'pending',
+      paymentTxnId: reg.paymentTxnId || '',
+      paymentScreenshotUrl: reg.paymentScreenshotUrl || '',
+      paymentNote: reg.paymentNote || '',
+      checkedIn: !!reg.checkedIn,
+      edition: reg.edition || '',
+      createdAt: reg.createdAt ? new Date(reg.createdAt).toISOString() : null,
+      updatedAt: reg.updatedAt ? new Date(reg.updatedAt).toISOString() : null,
+      checkedInAt: reg.checkedInAt ? new Date(reg.checkedInAt).toISOString() : null,
+      paymentVerifiedAt: reg.paymentVerifiedAt
+        ? new Date(reg.paymentVerifiedAt).toISOString()
+        : null,
     }));
 
     return {
@@ -324,10 +335,10 @@ export async function getEventOpsSummary() {
         Registration.countDocuments({ ...match, checkedIn: true }),
       ]);
       return {
-        slug: ev.slug,
-        name: ev.name,
-        fee: ev.registrationFee,
-        isActive: ev.isActive,
+        slug: String(ev.slug || ''),
+        name: String(ev.name || ''),
+        fee: Number(ev.registrationFee) || 0,
+        isActive: ev.isActive !== false,
         total,
         pending,
         verified,
