@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { saveSiteConfig } from '@/app/actions/adminSettings';
 import styles from '../AdminDashboard.module.css';
 
-export default function AdminSettingsClient({ initialConfig }) {
+export default function AdminSettingsClient({ initialConfig, events = [] }) {
   const c = initialConfig || {};
   const [form, setForm] = useState({
     name: c.name || '',
@@ -37,6 +37,22 @@ export default function AdminSettingsClient({ initialConfig }) {
   );
   const [qrFiles, setQrFiles] = useState({});
   const [saving, setSaving] = useState(false);
+
+  const missingQrFees = useMemo(() => {
+    const covered = new Set(
+      paymentQrs
+        .filter((t) => Number(t.amount) > 0 && t.qrImageUrl)
+        .map((t) => Number(t.amount))
+    );
+    const gaps = [];
+    for (const ev of events) {
+      const fee = Number(ev.registrationFee) || 0;
+      if (fee > 0 && !covered.has(fee)) {
+        gaps.push({ name: ev.name, fee });
+      }
+    }
+    return gaps;
+  }, [events, paymentQrs]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -152,8 +168,31 @@ export default function AdminSettingsClient({ initialConfig }) {
 
         <h2 style={{ margin: '28px 0 12px' }}>Payment QR tiers (Somaiya)</h2>
         <p style={{ color: '#666', marginBottom: 16, fontSize: 14 }}>
-          Upload one QR image per amount (e.g. 149 / 299 / 499). Event fees should sum to these amounts.
+          One QR per fee amount. Each paid event needs a matching tier (e.g. Debugging ₹100 → QR for
+          100). Registrations stay blocked until the QR image is uploaded.
         </p>
+        {missingQrFees.length > 0 && (
+          <div
+            style={{
+              marginBottom: 16,
+              padding: '12px 14px',
+              borderRadius: 10,
+              border: '1px solid rgba(245, 124, 0, 0.35)',
+              background: 'rgba(245, 124, 0, 0.08)',
+              fontSize: 14,
+              color: '#e65100',
+            }}
+          >
+            <strong>Missing QR for paid events:</strong>
+            <ul style={{ margin: '8px 0 0', paddingLeft: 18 }}>
+              {missingQrFees.map((g) => (
+                <li key={`${g.name}-${g.fee}`}>
+                  {g.name} — ₹{g.fee}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {paymentQrs.map((tier, idx) => (
           <div
             key={tier.amount}

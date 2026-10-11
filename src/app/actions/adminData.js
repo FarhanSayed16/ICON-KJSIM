@@ -117,22 +117,26 @@ export async function getRegistrations(
   await connectDB();
 
   try {
-    const query = {};
+    const clauses = [];
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { qrCode: { $regex: search, $options: 'i' } },
-        { mobile: { $regex: search, $options: 'i' } },
-        { paymentTxnId: { $regex: search, $options: 'i' } },
-      ];
+      clauses.push({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+          { qrCode: { $regex: search, $options: 'i' } },
+          { mobile: { $regex: search, $options: 'i' } },
+          { paymentTxnId: { $regex: search, $options: 'i' } },
+        ],
+      });
     }
     if (event) {
-      query.events = event;
+      // New regs use eventSlug; legacy multi-event regs use events[]
+      clauses.push({ $or: [{ eventSlug: event }, { events: event }] });
     }
     if (paymentStatus) {
-      query.paymentStatus = paymentStatus;
+      clauses.push({ paymentStatus });
     }
+    const query = clauses.length ? { $and: clauses } : {};
 
     const skip = (page - 1) * limit;
 
@@ -151,6 +155,11 @@ export async function getRegistrations(
       createdAt: reg.createdAt?.toISOString?.() || null,
       updatedAt: reg.updatedAt?.toISOString?.() || null,
       checkedInAt: reg.checkedInAt ? reg.checkedInAt.toISOString() : null,
+      paymentVerifiedAt: reg.paymentVerifiedAt
+        ? reg.paymentVerifiedAt.toISOString()
+        : null,
+      eventSlug: reg.eventSlug || (reg.events || [])[0] || '',
+      events: reg.events || [],
       // Back-compat for older docs that stored `phone`
       mobile: reg.mobile || reg.phone || '',
     }));
@@ -174,7 +183,9 @@ export async function exportRegistrationsCsv(event = '') {
   await verifyAdmin();
   await connectDB();
 
-  const query = event ? { events: event } : {};
+  const query = event
+    ? { $or: [{ eventSlug: event }, { events: event }] }
+    : {};
   const rows = await Registration.find(query).sort({ createdAt: -1 }).lean();
 
   const header = [
@@ -251,6 +262,11 @@ export async function setPaymentStatus(registrationId, status, note = '') {
   const reg = await Registration.findById(registrationId);
   if (!reg) return { success: false, message: 'Registration not found' };
 
+  // Backfill for legacy docs created before eventSlug existed
+  if (!reg.eventSlug && reg.events?.[0]) {
+    reg.eventSlug = reg.events[0];
+  }
+
   const prev = reg.paymentStatus;
   reg.paymentStatus = status;
   reg.paymentNote = String(note || '').slice(0, 500);
@@ -290,17 +306,22 @@ export async function setPaymentStatus(registrationId, status, note = '') {
   };
 }
 
+function eventMatch(slug) {
+  return { $or: [{ eventSlug: slug }, { events: slug }] };
+}
+
 export async function getEventOpsSummary() {
   await verifyAdmin();
   await connectDB();
   const events = await getEvents({});
   const rows = await Promise.all(
     events.map(async (ev) => {
+      const match = eventMatch(ev.slug);
       const [total, pending, verified, checkedIn] = await Promise.all([
-        Registration.countDocuments({ events: ev.slug }),
-        Registration.countDocuments({ events: ev.slug, paymentStatus: 'pending' }),
-        Registration.countDocuments({ events: ev.slug, paymentStatus: 'verified' }),
-        Registration.countDocuments({ events: ev.slug, checkedIn: true }),
+        Registration.countDocuments(match),
+        Registration.countDocuments({ ...match, paymentStatus: 'pending' }),
+        Registration.countDocuments({ ...match, paymentStatus: 'verified' }),
+        Registration.countDocuments({ ...match, checkedIn: true }),
       ]);
       return {
         slug: ev.slug,

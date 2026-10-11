@@ -151,9 +151,5 @@ RegistrationSchema.index(
   }
 );
 
-// Hot-reload can keep a stale schema (e.g. old unique email). Prefer fresh model in dev.
-if (mongoose.models.Registration) {
-  delete mongoose.models.Registration;
-}
-
-export default mongoose.model('Registration', RegistrationSchema);
+export default mongoose.models.Registration ||
+  mongoose.model('Registration', RegistrationSchema);

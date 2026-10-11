@@ -14,15 +14,16 @@ import {
   Cell,
   LineChart,
   Line,
-  Legend,
 } from 'recharts';
-import { HiOutlineRefresh, HiOutlineDownload } from 'react-icons/hi';
+import { HiOutlineRefresh, HiOutlineDownload, HiX } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import {
   getDashboardStats,
   getRegistrations,
   exportRegistrationsCsv,
   setPaymentStatus,
+  getEventOpsSummary,
+  getPaymentStats,
 } from '@/app/actions/adminData';
 import AdminImageCropper from './AdminImageCropper';
 import AdminImageTuner from './AdminImageTuner';
@@ -38,6 +39,14 @@ function paymentBadgeClass(status) {
   return styles.badgePending;
 }
 
+function getPrimaryEventSlug(reg) {
+  return reg.eventSlug || reg.events?.[0] || '';
+}
+
+function isLegacyMultiEvent(reg) {
+  return Array.isArray(reg.events) && reg.events.length > 1;
+}
+
 export default function AdminDashboardClient({
   initialStats,
   initialRegistrationsData,
@@ -50,18 +59,40 @@ export default function AdminDashboardClient({
   const [range, setRange] = useState('all');
   const [stats, setStats] = useState(initialStats);
   const [tableData, setTableData] = useState(initialRegistrationsData);
+  const [opsRows, setOpsRows] = useState(eventOps);
+  const [payStats, setPayStats] = useState(paymentStats);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loading, setLoading] = useState(!initialStats);
   const [searchTerm, setSearchTerm] = useState('');
   const [eventFilter, setEventFilter] = useState('');
   const [paymentFilter, setPaymentFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [proofReg, setProofReg] = useState(null);
+  const [actionBusy, setActionBusy] = useState(null);
+  const [regsVisited, setRegsVisited] = useState(false);
 
   const eventNameBySlug = useMemo(() => {
     const map = {};
     for (const ev of events) map[ev.slug] = ev.name;
     return map;
   }, [events]);
+
+  const pendingPay =
+    payStats?.pending ??
+    opsRows.reduce((sum, row) => sum + (row.pending || 0), 0);
+  const verifiedPay =
+    payStats?.verified ??
+    opsRows.reduce((sum, row) => sum + (row.verified || 0), 0);
+
+  const sortedEventOps = useMemo(() => {
+    return [...opsRows]
+      .filter((row) => row.isActive !== false || (row.total || 0) > 0)
+      .sort((a, b) => {
+        if ((b.pending || 0) !== (a.pending || 0)) return (b.pending || 0) - (a.pending || 0);
+        if ((b.total || 0) !== (a.total || 0)) return (b.total || 0) - (a.total || 0);
+        return (a.name || '').localeCompare(b.name || '');
+      });
+  }, [opsRows]);
 
   const fetchDashboardData = useCallback(
     async (
@@ -73,14 +104,18 @@ export default function AdminDashboardClient({
     ) => {
       setIsRefreshing(true);
       try {
-        const [statsRes, regsRes] = await Promise.all([
+        const [statsRes, regsRes, opsRes, payRes] = await Promise.all([
           getDashboardStats(range),
           getRegistrations(page, PAGE_SIZE, search, event, pay),
+          getEventOpsSummary(),
+          getPaymentStats(),
         ]);
 
         if (statsRes.success && regsRes.success) {
           setStats(statsRes.data);
           setTableData(regsRes.data);
+          if (opsRes.success) setOpsRows(opsRes.data || []);
+          if (payRes.success) setPayStats(payRes.data);
           if (showToast) toast.success('Dashboard refreshed');
         } else {
           toast.error('Failed to load fresh data');
@@ -117,6 +152,21 @@ export default function AdminDashboardClient({
     return () => clearInterval(id);
   }, [fetchDashboardData, currentPage, searchTerm, eventFilter, paymentFilter]);
 
+  // Proof panel: Escape to close + lock body scroll
+  useEffect(() => {
+    if (!proofReg) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setProofReg(null);
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [proofReg]);
+
   const handleExport = async () => {
     const res = await exportRegistrationsCsv(eventFilter);
     if (!res.success) {
@@ -133,22 +183,52 @@ export default function AdminDashboardClient({
     toast.success('CSV downloaded');
   };
 
-  const openEventRegistrations = (slug) => {
-    setEventFilter(slug);
+  const openEventRegistrations = (row) => {
+    setEventFilter(row.slug);
+    setPaymentFilter((row.pending || 0) > 0 ? 'pending' : '');
+    setRegsVisited(true);
     setActiveTab('registrations');
+  };
+
+  const openReviewPending = () => {
+    setEventFilter('');
+    setPaymentFilter('pending');
+    setRegsVisited(true);
+    setActiveTab('registrations');
+  };
+
+  const handleTabChange = (tabId) => {
+    if (tabId === 'registrations' && !regsVisited) {
+      setPaymentFilter('pending');
+      setRegsVisited(true);
+    }
+    setActiveTab(tabId);
+  };
+
+  const applyPaymentStatus = async (regId, status) => {
+    setActionBusy(`${regId}-${status}`);
+    try {
+      let note = '';
+      if (status === 'rejected') {
+        note = prompt('Rejection note (optional)') || '';
+      }
+      const res = await setPaymentStatus(regId, status, note);
+      if (res.success) {
+        toast.success(res.message);
+        setProofReg(null);
+        fetchDashboardData(currentPage, searchTerm, eventFilter, paymentFilter);
+      } else {
+        toast.error(res.message || 'Failed');
+      }
+    } finally {
+      setActionBusy(null);
+    }
   };
 
   const checkInRate =
     stats?.totalRegistrations > 0
       ? Math.round((stats.totalCheckedIn / stats.totalRegistrations) * 100)
       : 0;
-
-  const pendingPay =
-    paymentStats?.pending ??
-    eventOps.reduce((sum, row) => sum + (row.pending || 0), 0);
-  const verifiedPay =
-    paymentStats?.verified ??
-    eventOps.reduce((sum, row) => sum + (row.verified || 0), 0);
 
   const selectedEventName = eventFilter
     ? eventNameBySlug[eventFilter] || eventFilter
@@ -160,20 +240,25 @@ export default function AdminDashboardClient({
         <div>
           <h1 className={styles.pageTitle}>
             Live Operations
-            {isRefreshing ? (
-              <span style={{ fontSize: '0.85rem', opacity: 0.55, fontWeight: 500, marginLeft: 10 }}>
-                Refreshing…
-              </span>
-            ) : null}
+            {isRefreshing ? <span className={styles.refreshHint}>Refreshing…</span> : null}
           </h1>
           <p className={styles.pageSub}>
-            Stats, per-event breakdown, and payment verification — kept in separate views.
+            Payment verify desk, per-event counts, and live stats.
           </p>
         </div>
         <div className={styles.headerActions}>
+          {pendingPay > 0 && (
+            <button
+              type="button"
+              className={`${styles.actionBtn} ${styles.actionBtnPrimary}`}
+              onClick={openReviewPending}
+            >
+              Review pending ({pendingPay})
+            </button>
+          )}
           <button type="button" className={styles.actionBtn} onClick={handleExport}>
             <HiOutlineDownload size={16} />
-            Export CSV
+            CSV
           </button>
           <button
             type="button"
@@ -193,7 +278,10 @@ export default function AdminDashboardClient({
         {[
           { id: 'overview', label: 'Overview' },
           { id: 'events', label: 'By Event' },
-          { id: 'registrations', label: 'Registrations' },
+          {
+            id: 'registrations',
+            label: pendingPay > 0 ? `Verify (${pendingPay})` : 'Verify desk',
+          },
           { id: 'tools', label: 'Image Tools' },
         ].map((tab) => (
           <button
@@ -202,7 +290,7 @@ export default function AdminDashboardClient({
             role="tab"
             aria-selected={activeTab === tab.id}
             className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
           >
             {tab.label}
           </button>
@@ -226,6 +314,11 @@ export default function AdminDashboardClient({
                 {r.label}
               </button>
             ))}
+            {pendingPay > 0 && (
+              <button type="button" className={styles.chipWarn} onClick={openReviewPending}>
+                Review pending ({pendingPay})
+              </button>
+            )}
           </div>
 
           {loading ? (
@@ -239,7 +332,7 @@ export default function AdminDashboardClient({
           ) : (
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
-                <span className={styles.statLabel}>Total registrations</span>
+                <span className={styles.statLabel}>Registrations</span>
                 <span className={styles.statValue}>{stats.totalRegistrations}</span>
               </div>
               <div className={styles.statCard}>
@@ -247,18 +340,23 @@ export default function AdminDashboardClient({
                 <span className={styles.statValue}>{stats.totalCheckedIn}</span>
                 <span className={styles.statHint}>{checkInRate}% turnout</span>
               </div>
+              <button
+                type="button"
+                className={`${styles.statCard} ${styles.statCardAction}`}
+                onClick={openReviewPending}
+              >
+                <span className={styles.statLabel}>Pending pay</span>
+                <span className={`${styles.statValue} ${styles.statWarn}`}>{pendingPay}</span>
+                <span className={styles.statHint}>Tap to review →</span>
+              </button>
               <div className={styles.statCard}>
-                <span className={styles.statLabel}>Payment pending</span>
-                <span className={styles.statValue}>{pendingPay}</span>
+                <span className={styles.statLabel}>Verified</span>
+                <span className={`${styles.statValue} ${styles.statOk}`}>{verifiedPay}</span>
               </div>
               <div className={styles.statCard}>
-                <span className={styles.statLabel}>Payment verified</span>
-                <span className={styles.statValue}>{verifiedPay}</span>
-              </div>
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>Active events</span>
+                <span className={styles.statLabel}>Events</span>
                 <span className={styles.statValue}>
-                  {eventOps.filter((e) => e.isActive !== false).length || events.length}
+                  {opsRows.filter((e) => e.isActive !== false).length || events.length}
                 </span>
               </div>
             </div>
@@ -292,15 +390,15 @@ export default function AdminDashboardClient({
 
             <div className={styles.chartCard}>
               <h3 className={styles.sectionTitle}>Top colleges</h3>
-              <div className={styles.chartBody} style={{ height: 220 }}>
+              <div className={styles.chartBody} style={{ height: 200 }}>
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie
                       data={stats.collegeDistribution || []}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
+                      innerRadius={48}
+                      outerRadius={76}
                       paddingAngle={2}
                       dataKey="value"
                       nameKey="name"
@@ -310,12 +408,6 @@ export default function AdminDashboardClient({
                       ))}
                     </Pie>
                     <RechartsTooltip />
-                    <Legend
-                      layout="vertical"
-                      align="right"
-                      verticalAlign="middle"
-                      wrapperStyle={{ fontSize: 11 }}
-                    />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -338,7 +430,7 @@ export default function AdminDashboardClient({
 
             <div className={`${styles.chartCard} ${styles.chartCardWide}`}>
               <h3 className={styles.sectionTitle}>Registrations over time</h3>
-              <div className={styles.chartBody}>
+              <div className={styles.chartBody} style={{ height: 240 }}>
                 <ResponsiveContainer>
                   <LineChart data={stats.registrationsByDate || []}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -363,41 +455,43 @@ export default function AdminDashboardClient({
 
       {activeTab === 'events' && (
         <section>
-          <div className={styles.panelHeader} style={{ marginBottom: '1rem' }}>
+          <div className={styles.panelHeader}>
             <div>
               <h2 className={styles.sectionTitle} style={{ marginBottom: 4 }}>
                 Event breakdown
               </h2>
               <p className={styles.pageSub}>
-                Each card shows totals for that event only. Click a card to open its registrations.
+                Sorted by pending payments. Click a card to open that event’s verify desk.
               </p>
             </div>
           </div>
 
-          {eventOps.length === 0 ? (
+          {sortedEventOps.length === 0 ? (
             <div className={styles.panel}>
               <p className={styles.empty}>No events found. Add events in the Events manager.</p>
             </div>
           ) : (
             <div className={styles.eventGrid}>
-              {eventOps.map((row) => (
+              {sortedEventOps.map((row) => (
                 <button
                   key={row.slug}
                   type="button"
                   className={`${styles.eventCard} ${
                     eventFilter === row.slug ? styles.eventCardActive : ''
-                  }`}
-                  onClick={() => openEventRegistrations(row.slug)}
+                  } ${(row.pending || 0) > 0 ? styles.eventCardPending : ''}`}
+                  onClick={() => openEventRegistrations(row)}
                 >
                   <div className={styles.eventCardTop}>
                     <div>
                       <h3 className={styles.eventName}>{row.name}</h3>
                       <div className={styles.eventMeta}>
-                        {row.slug}
-                        {typeof row.fee === 'number' ? ` · ₹${row.fee}` : ''}
+                        {typeof row.fee === 'number' ? `₹${row.fee}` : '—'}
                         {row.isActive === false ? ' · inactive' : ''}
                       </div>
                     </div>
+                    {(row.pending || 0) > 0 && (
+                      <span className={styles.pendingBadge}>{row.pending} pending</span>
+                    )}
                   </div>
                   <div className={styles.eventMetrics}>
                     <div className={styles.metric}>
@@ -417,7 +511,7 @@ export default function AdminDashboardClient({
                       </span>
                     </div>
                     <div className={styles.metric}>
-                      <span className={styles.metricLabel}>Checked in</span>
+                      <span className={styles.metricLabel}>In</span>
                       <span className={styles.metricValue}>{row.checkedIn}</span>
                     </div>
                   </div>
@@ -427,7 +521,9 @@ export default function AdminDashboardClient({
                         ? `${Math.round((row.checkedIn / row.total) * 100)}% check-in`
                         : 'No regs yet'}
                     </span>
-                    <span className={styles.viewLink}>View list →</span>
+                    <span className={styles.viewLink}>
+                      {(row.pending || 0) > 0 ? 'Review →' : 'Open →'}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -437,17 +533,24 @@ export default function AdminDashboardClient({
       )}
 
       {activeTab === 'registrations' && (
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <div>
-              <h2 className={styles.sectionTitle} style={{ marginBottom: 4 }}>
-                Registrations desk
-              </h2>
-              <p className={styles.pageSub}>
-                {selectedEventName
-                  ? `Filtered to: ${selectedEventName}`
-                  : 'All events — use filters to narrow by event or payment status.'}
-              </p>
+        <section className={styles.desk}>
+          <div className={styles.deskSticky}>
+            <div className={styles.deskTitleRow}>
+              <div>
+                <h2 className={styles.sectionTitle} style={{ marginBottom: 4 }}>
+                  Payment verify desk
+                </h2>
+                <p className={styles.pageSub}>
+                  {selectedEventName
+                    ? `${selectedEventName}${paymentFilter ? ` · ${paymentFilter}` : ''}`
+                    : paymentFilter
+                      ? `All events · ${paymentFilter}`
+                      : 'All events · all payments'}
+                </p>
+              </div>
+              {pendingPay > 0 && (
+                <span className={styles.pendingChip}>{pendingPay} pending overall</span>
+              )}
             </div>
             <div className={styles.filters}>
               <select
@@ -480,8 +583,7 @@ export default function AdminDashboardClient({
                 placeholder="Search name, email, mobile, UTR, ID…"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchInput}
-                style={{ minWidth: 220 }}
+                className={`${styles.searchInput} ${styles.searchWide}`}
               />
               {(eventFilter || paymentFilter || searchTerm) && (
                 <button
@@ -493,141 +595,103 @@ export default function AdminDashboardClient({
                     setSearchTerm('');
                   }}
                 >
-                  Clear filters
+                  Clear
                 </button>
               )}
             </div>
           </div>
 
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Reg ID</th>
-                  <th>Name</th>
-                  <th>Contact</th>
-                  <th>College</th>
-                  <th>Events</th>
-                  <th>Amount / UTR</th>
-                  <th>Payment</th>
-                  <th>Proof</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(tableData?.registrations || []).map((reg) => (
-                  <tr key={reg._id}>
-                    <td className={styles.mono}>{reg.qrCode}</td>
-                    <td>
-                      <div className={styles.nameCell}>{reg.name}</div>
-                      {reg.department ? (
-                        <div className={styles.subCell}>{reg.department}</div>
-                      ) : null}
-                    </td>
-                    <td>
-                      <div className={styles.subCell}>{reg.email}</div>
-                      <div className={styles.subCell}>{reg.mobile || '—'}</div>
-                    </td>
-                    <td>{reg.college || '—'}</td>
-                    <td>
-                      <div className={styles.eventTags}>
-                        {(reg.eventSlug
-                          ? [reg.eventSlug]
-                          : reg.events || []
-                        ).map((slug) => (
-                          <span key={slug} className={styles.eventTag}>
-                            {eventNameBySlug[slug] || slug}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>
-                      <div>₹{reg.payableAmount ?? 0}</div>
-                      <div className={styles.mono}>{reg.paymentTxnId || '—'}</div>
-                    </td>
-                    <td>
-                      <span
-                        className={`${styles.badge} ${paymentBadgeClass(reg.paymentStatus)}`}
+          <div className={styles.deskList}>
+            {(tableData?.registrations || []).length === 0 && (
+              <div className={styles.empty}>
+                {paymentFilter === 'pending'
+                  ? 'No pending payments for this filter. Clear filters to see all.'
+                  : 'No registrations match these filters.'}
+              </div>
+            )}
+
+            {(tableData?.registrations || []).map((reg) => {
+              const slug = getPrimaryEventSlug(reg);
+              const eventName = eventNameBySlug[slug] || slug || 'Unknown event';
+              const legacy = isLegacyMultiEvent(reg);
+
+              return (
+                <article key={reg._id} className={styles.deskRow}>
+                  <div className={styles.deskPerson}>
+                    <div className={styles.nameCell}>{reg.name}</div>
+                    <div className={styles.subCell}>{reg.college || '—'}</div>
+                    <div className={styles.subCell}>
+                      {reg.email}
+                      {reg.mobile ? ` · ${reg.mobile}` : ''}
+                    </div>
+                    <div className={styles.monoTiny}>{reg.qrCode}</div>
+                  </div>
+
+                  <div className={styles.deskEvent}>
+                    <div className={styles.eventLine}>
+                      <span className={styles.eventTag}>{eventName}</span>
+                      {legacy && <span className={styles.legacyBadge}>legacy</span>}
+                    </div>
+                    <div className={styles.feeLine}>
+                      <strong>₹{reg.payableAmount ?? 0}</strong>
+                      <span className={styles.mono}>{reg.paymentTxnId || 'No UTR'}</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.deskStatus}>
+                    <span className={`${styles.badge} ${paymentBadgeClass(reg.paymentStatus)}`}>
+                      {reg.paymentStatus || 'pending'}
+                    </span>
+                    {reg.paymentScreenshotUrl ? (
+                      <button
+                        type="button"
+                        className={styles.proofThumbBtn}
+                        onClick={() => setProofReg(reg)}
                       >
-                        {reg.paymentStatus || 'pending'}
-                      </span>
-                    </td>
-                    <td>
-                      {reg.paymentScreenshotUrl ? (
-                        <a
-                          href={reg.paymentScreenshotUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={styles.proofLink}
-                        >
-                          View proof
-                        </a>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td>
-                      <div className={styles.rowActions}>
-                        {reg.paymentStatus !== 'verified' && (
-                          <button
-                            type="button"
-                            className={`${styles.pageBtn} ${styles.verifyBtn}`}
-                            onClick={async () => {
-                              const res = await setPaymentStatus(reg._id, 'verified');
-                              if (res.success) {
-                                toast.success(res.message);
-                                fetchDashboardData(
-                                  currentPage,
-                                  searchTerm,
-                                  eventFilter,
-                                  paymentFilter
-                                );
-                              } else toast.error(res.message || 'Failed');
-                            }}
-                          >
-                            Verify
-                          </button>
-                        )}
-                        {reg.paymentStatus !== 'rejected' && (
-                          <button
-                            type="button"
-                            className={`${styles.pageBtn} ${styles.rejectBtn}`}
-                            onClick={async () => {
-                              const note = prompt('Rejection note (optional)') || '';
-                              const res = await setPaymentStatus(reg._id, 'rejected', note);
-                              if (res.success) {
-                                toast.success(res.message);
-                                fetchDashboardData(
-                                  currentPage,
-                                  searchTerm,
-                                  eventFilter,
-                                  paymentFilter
-                                );
-                              } else toast.error(res.message || 'Failed');
-                            }}
-                          >
-                            Reject
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {(tableData?.registrations || []).length === 0 && (
-                  <tr>
-                    <td colSpan={9} className={styles.empty}>
-                      No registrations match these filters.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={reg.paymentScreenshotUrl}
+                          alt="Payment proof"
+                          className={styles.proofThumb}
+                        />
+                        <span>Proof</span>
+                      </button>
+                    ) : (
+                      <span className={styles.subCell}>No proof</span>
+                    )}
+                  </div>
+
+                  <div className={styles.deskActions}>
+                    {reg.paymentStatus !== 'verified' && (
+                      <button
+                        type="button"
+                        className={styles.verifySolid}
+                        disabled={actionBusy === `${reg._id}-verified`}
+                        onClick={() => applyPaymentStatus(reg._id, 'verified')}
+                      >
+                        Verify
+                      </button>
+                    )}
+                    {reg.paymentStatus !== 'rejected' && (
+                      <button
+                        type="button"
+                        className={styles.rejectSolid}
+                        disabled={actionBusy === `${reg._id}-rejected`}
+                        onClick={() => applyPaymentStatus(reg._id, 'rejected')}
+                      >
+                        Reject
+                      </button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           {(tableData?.totalPages || 0) > 1 && (
             <div className={styles.pagination}>
               <span>
-                Showing {tableData.registrations.length} of {tableData.totalItems} entries
+                Showing {tableData.registrations.length} of {tableData.totalItems}
               </span>
               <div className={styles.pageControls}>
                 <button
@@ -643,7 +707,7 @@ export default function AdminDashboardClient({
                   Previous
                 </button>
                 <span>
-                  Page {currentPage} of {tableData.totalPages}
+                  {currentPage} / {tableData.totalPages}
                 </span>
                 <button
                   type="button"
@@ -683,6 +747,124 @@ export default function AdminDashboardClient({
           </div>
           {toolTab === 'tuner' ? <AdminImageTuner /> : <AdminImageCropper />}
         </section>
+      )}
+
+      {proofReg && (
+        <div className={styles.proofOverlay} onClick={() => setProofReg(null)} role="presentation">
+          <div
+            className={styles.proofPanel}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-labelledby="proof-title"
+          >
+            <div className={styles.proofHeader}>
+              <div>
+                <h3 id="proof-title" className={styles.sectionTitle} style={{ marginBottom: 4 }}>
+                  Payment proof
+                </h3>
+                <p className={styles.pageSub}>{proofReg.name}</p>
+              </div>
+              <button
+                type="button"
+                className={styles.iconClose}
+                onClick={() => setProofReg(null)}
+                aria-label="Close"
+              >
+                <HiX size={20} />
+              </button>
+            </div>
+
+            <div className={styles.proofMeta}>
+              <div>
+                <span className={styles.metaLabel}>Event</span>
+                <span>
+                  {eventNameBySlug[getPrimaryEventSlug(proofReg)] || getPrimaryEventSlug(proofReg)}
+                  {isLegacyMultiEvent(proofReg) && (
+                    <span className={styles.legacyBadge}> legacy</span>
+                  )}
+                </span>
+              </div>
+              <div>
+                <span className={styles.metaLabel}>Amount</span>
+                <span>₹{proofReg.payableAmount ?? 0}</span>
+              </div>
+              <div>
+                <span className={styles.metaLabel}>UTR</span>
+                <span className={styles.mono}>{proofReg.paymentTxnId || '—'}</span>
+              </div>
+              <div>
+                <span className={styles.metaLabel}>Status</span>
+                <span
+                  className={`${styles.badge} ${paymentBadgeClass(proofReg.paymentStatus)}`}
+                >
+                  {proofReg.paymentStatus || 'pending'}
+                </span>
+              </div>
+              <div>
+                <span className={styles.metaLabel}>Contact</span>
+                <span className={styles.subCell}>
+                  {proofReg.email}
+                  {proofReg.mobile ? ` · ${proofReg.mobile}` : ''}
+                </span>
+              </div>
+              <div>
+                <span className={styles.metaLabel}>Reg ID</span>
+                <span className={styles.mono}>{proofReg.qrCode}</span>
+              </div>
+            </div>
+
+            {proofReg.paymentScreenshotUrl ? (
+              <a
+                href={proofReg.paymentScreenshotUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.proofImageWrap}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={proofReg.paymentScreenshotUrl}
+                  alt="Payment screenshot"
+                  className={styles.proofImage}
+                />
+              </a>
+            ) : (
+              <p className={styles.empty}>No screenshot uploaded.</p>
+            )}
+
+            <div className={styles.proofActions}>
+              {proofReg.paymentStatus !== 'verified' && (
+                <button
+                  type="button"
+                  className={styles.verifySolid}
+                  disabled={actionBusy === `${proofReg._id}-verified`}
+                  onClick={() => applyPaymentStatus(proofReg._id, 'verified')}
+                >
+                  Verify payment
+                </button>
+              )}
+              {proofReg.paymentStatus !== 'rejected' && (
+                <button
+                  type="button"
+                  className={styles.rejectSolid}
+                  disabled={actionBusy === `${proofReg._id}-rejected`}
+                  onClick={() => applyPaymentStatus(proofReg._id, 'rejected')}
+                >
+                  Reject
+                </button>
+              )}
+              {proofReg.paymentScreenshotUrl && (
+                <a
+                  href={proofReg.paymentScreenshotUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.actionBtn}
+                >
+                  Open full size
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       <style jsx global>{`

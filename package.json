@@ -5,6 +5,8 @@
   "description": "ICON 2026 — DATATRON | Official Techfest Website of KJSIM, Somaiya Vidyavihar University",
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
+    "dev:webpack": "next dev --webpack",
     "build": "next build && next-sitemap",
     "start": "next start",
     "lint": "eslint",
