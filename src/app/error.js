@@ -2,30 +2,13 @@
 
 import { useEffect } from 'react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-
-function isStaleChunkError(error) {
-  const message = String(error?.message || '');
-  return (
-    error?.name === 'ChunkLoadError' ||
-    message.includes('Loading chunk') ||
-    message.includes('enqueueModel is not a function') ||
-    message.includes('/_next/_next/')
-  );
-}
+import { isStaleChunkError, reloadForStaleAssets, RELOAD_KEY } from '@/lib/assetRecovery';
 
 export default function Error({ error, reset }) {
   useEffect(() => {
     if (isStaleChunkError(error)) {
-      try {
-        if (sessionStorage.getItem('icon_chunk_reload') !== '1') {
-          sessionStorage.setItem('icon_chunk_reload', '1');
-          window.location.reload();
-          return;
-        }
-      } catch {
-        window.location.reload();
-        return;
-      }
+      reloadForStaleAssets();
+      return;
     }
     console.error('Global Application Error:', error?.message || error);
   }, [error]);
@@ -75,7 +58,7 @@ export default function Error({ error, reset }) {
           type="button"
           onClick={() => {
             try {
-              sessionStorage.removeItem('icon_chunk_reload');
+              sessionStorage.removeItem(RELOAD_KEY);
             } catch {
               /* ignore */
             }

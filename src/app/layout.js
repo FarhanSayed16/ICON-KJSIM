@@ -2,6 +2,7 @@ import { Outfit, Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import ChunkLoadRecovery from '@/components/ChunkLoadRecovery';
+import { assetRecoveryScript } from '@/lib/assetRecovery';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -80,6 +81,9 @@ export default function RootLayout({ children }) {
       data-scroll-behavior="smooth"
       className={`${outfit.variable} ${inter.variable} ${spaceGrotesk.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: assetRecoveryScript }} />
+      </head>
       <body suppressHydrationWarning style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
         <ChunkLoadRecovery />
         {children}

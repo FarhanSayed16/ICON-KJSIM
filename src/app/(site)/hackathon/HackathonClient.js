@@ -17,7 +17,7 @@ export default function HackathonClient() {
             <p className={styles.subtitle}>The Ultimate 24-Hour Hackathon at KJSIM</p>
             <div className={styles.dates}>February 13 – 14, 2026</div>
             <div>
-              <Link href="/register?event=code-icon" className="btn-primary">
+              <Link href="/register?event=hackathon" className="btn-primary">
                 Register Now
               </Link>
             </div>
@@ -130,7 +130,7 @@ export default function HackathonClient() {
         {/* ── Bottom CTA ── */}
         <ScrollReveal>
           <div className={styles.ctaBottom}>
-            <Link href="/register?event=code-icon" className="btn-primary">
+            <Link href="/register?event=hackathon" className="btn-primary">
               Register Your Team
             </Link>
           </div>

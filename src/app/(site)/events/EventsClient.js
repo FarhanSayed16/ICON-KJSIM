@@ -64,8 +64,10 @@ export default function EventsClient({ events = [] }) {
         {/* Page Header */}
         <ScrollReveal>
           <div className={styles.header}>
-            <h1 className={styles.title}>All Events</h1>
-            <p className={styles.subtitle}>Discover, compete, and conquer at ICON 2026</p>
+            <h1 className={styles.title}>Events</h1>
+            <p className={styles.subtitle}>
+              Technical &amp; creative, sports, indoor &amp; esports, and a free Mini-Games Zone
+            </p>
           </div>
         </ScrollReveal>
 

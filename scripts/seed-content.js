@@ -39,6 +39,7 @@ async function main() {
           maxParticipants: Number,
           posterImage: String,
           rules: [String],
+          includes: [String],
           poc: { name: String, phone: String, email: String },
           isActive: Boolean,
           isRegistrationOpen: Boolean,
@@ -94,6 +95,7 @@ async function main() {
   }
 
   const edition = process.env.ICON_EDITION || '2026';
+  const keepSlugs = EVENTS.map((e) => e.slug);
   let upserted = 0;
   for (let i = 0; i < EVENTS.length; i++) {
     const e = EVENTS[i];
@@ -109,12 +111,13 @@ async function main() {
         date: e.date || '',
         time: e.time || '',
         venue: e.venue || '',
-        registrationFee: e.registrationFee || 0,
+        registrationFee: Number(e.registrationFee) || 0,
         prizePool: typeof e.prizePool === 'number' ? e.prizePool : 0,
         teamSize: e.teamSize || 'Solo',
         maxParticipants: e.maxParticipants ?? null,
         posterImage: e.posterImage || '',
         rules: e.rules || [],
+        includes: Array.isArray(e.includes) ? e.includes : [],
         poc: e.poc || {},
         isActive: e.isActive !== false,
         isRegistrationOpen: e.isActive !== false,
@@ -126,6 +129,12 @@ async function main() {
     );
     upserted++;
   }
+
+  // Hide retired events from previous lineups (keep DB history)
+  const deactivated = await Event.updateMany(
+    { edition, slug: { $nin: keepSlugs } },
+    { $set: { isActive: false, isRegistrationOpen: false } }
+  );
 
   await SiteConfig.findOneAndUpdate(
     { key: 'default' },
@@ -156,7 +165,10 @@ async function main() {
     { upsert: true, new: true }
   );
 
-  console.log(`✅ Seeded ${upserted} events + SiteConfig for edition ${edition}`);
+  console.log(
+    `✅ Seeded ${upserted} events + SiteConfig for edition ${edition}` +
+      ` (deactivated ${deactivated.modifiedCount || 0} retired events)`
+  );
   await mongoose.disconnect();
 }
 

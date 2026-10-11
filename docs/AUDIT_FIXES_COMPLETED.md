@@ -40,7 +40,7 @@
 - [ ] Set real YouTube Live ID in `LIVE_STREAM` on event day
 - [ ] Confirm MongoDB Atlas `0.0.0.0/0` (or Vercel integration) on deploy
 - [ ] Rotate any secrets if `.env` was previously committed to git
-- [ ] Optional: migrate Next 16 middleware → `proxy` when ready
+- [x] Migrated Next 16 middleware → `src/proxy.js` (matcher limited to `/admin`)
 - [ ] Run Lighthouse + cross-browser smoke on production URL
 
 ## Smoke test checklist (do after deploy / local with Mongo)

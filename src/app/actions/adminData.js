@@ -26,10 +26,30 @@ export async function getDashboardStats(range = 'all') {
       checkedIn: true,
     });
 
+    // Prefer eventSlug (single-event regs); fall back to first events[] entry (legacy)
     const eventCounts = await Registration.aggregate([
       ...(start ? [{ $match: match }] : []),
-      { $unwind: '$events' },
-      { $group: { _id: '$events', count: { $sum: 1 } } },
+      {
+        $addFields: {
+          primarySlug: {
+            $let: {
+              vars: {
+                fromSlug: { $ifNull: ['$eventSlug', ''] },
+                fromArr: { $ifNull: [{ $arrayElemAt: ['$events', 0] }, ''] },
+              },
+              in: {
+                $cond: [
+                  { $ne: ['$$fromSlug', ''] },
+                  '$$fromSlug',
+                  '$$fromArr',
+                ],
+              },
+            },
+          },
+        },
+      },
+      { $match: { primarySlug: { $nin: [null, ''] } } },
+      { $group: { _id: '$primarySlug', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
 
@@ -46,13 +66,14 @@ export async function getDashboardStats(range = 'all') {
 
     const collegeCounts = await Registration.aggregate([
       ...(start ? [{ $match: match }] : []),
+      { $match: { college: { $nin: [null, ''] } } },
       { $group: { _id: '$college', value: { $sum: 1 } } },
       { $sort: { value: -1 } },
       { $limit: 5 },
     ]);
 
     const collegeDistribution = collegeCounts.map((item) => ({
-      name: item._id,
+      name: item._id || 'Unknown',
       value: item.value,
     }));
 
@@ -317,34 +338,58 @@ export async function setPaymentStatus(registrationId, status, note = '') {
   };
 }
 
-function eventMatch(slug) {
-  return { $or: [{ eventSlug: slug }, { events: slug }] };
-}
-
 export async function getEventOpsSummary() {
   await verifyAdmin();
   await connectDB();
   const events = await getEvents({});
-  const rows = await Promise.all(
-    events.map(async (ev) => {
-      const match = eventMatch(ev.slug);
-      const [total, pending, verified, checkedIn] = await Promise.all([
-        Registration.countDocuments(match),
-        Registration.countDocuments({ ...match, paymentStatus: 'pending' }),
-        Registration.countDocuments({ ...match, paymentStatus: 'verified' }),
-        Registration.countDocuments({ ...match, checkedIn: true }),
-      ]);
-      return {
-        slug: String(ev.slug || ''),
-        name: String(ev.name || ''),
-        fee: Number(ev.registrationFee) || 0,
-        isActive: ev.isActive !== false,
-        total,
-        pending,
-        verified,
-        checkedIn,
-      };
-    })
-  );
+
+  // One aggregation instead of 4×N countDocuments (was making admin feel frozen)
+  const grouped = await Registration.aggregate([
+    {
+      $addFields: {
+        primarySlug: {
+          $let: {
+            vars: {
+              fromSlug: { $ifNull: ['$eventSlug', ''] },
+              fromArr: { $ifNull: [{ $arrayElemAt: ['$events', 0] }, ''] },
+            },
+            in: {
+              $cond: [{ $ne: ['$$fromSlug', ''] }, '$$fromSlug', '$$fromArr'],
+            },
+          },
+        },
+      },
+    },
+    { $match: { primarySlug: { $nin: [null, ''] } } },
+    {
+      $group: {
+        _id: '$primarySlug',
+        total: { $sum: 1 },
+        pending: {
+          $sum: { $cond: [{ $eq: ['$paymentStatus', 'pending'] }, 1, 0] },
+        },
+        verified: {
+          $sum: { $cond: [{ $eq: ['$paymentStatus', 'verified'] }, 1, 0] },
+        },
+        checkedIn: { $sum: { $cond: ['$checkedIn', 1, 0] } },
+      },
+    },
+  ]);
+
+  const bySlug = Object.fromEntries(grouped.map((g) => [g._id, g]));
+
+  const rows = events.map((ev) => {
+    const g = bySlug[ev.slug] || {};
+    return {
+      slug: String(ev.slug || ''),
+      name: String(ev.name || ''),
+      fee: Number(ev.registrationFee) || 0,
+      isActive: ev.isActive !== false,
+      total: g.total || 0,
+      pending: g.pending || 0,
+      verified: g.verified || 0,
+      checkedIn: g.checkedIn || 0,
+    };
+  });
   return { success: true, data: rows };
 }

@@ -15,8 +15,10 @@ import styles from './RegisterPage.module.css';
 
 const CATEGORY_LABEL = {
   technical: 'Technical',
-  'non-technical': 'Non-Technical',
-  gaming: 'Gaming',
+  sports: 'Sports',
+  gaming: 'Indoor Games & Esports',
+  'mini-games': 'Mini-Games Zone (Free)',
+  'non-technical': 'Other',
 };
 
 function feeLabel(fee) {
@@ -198,12 +200,17 @@ export default function RegistrationClient({ events = [], siteConfig }) {
   if (!eventParam) {
     const groups = [
       { key: 'technical', label: 'Technical', list: events.filter((e) => e.category === 'technical') },
+      { key: 'sports', label: 'Sports', list: events.filter((e) => e.category === 'sports') },
       {
-        key: 'non-technical',
-        label: 'Non-Technical',
-        list: events.filter((e) => e.category === 'non-technical'),
+        key: 'gaming',
+        label: 'Indoor Games & Esports',
+        list: events.filter((e) => e.category === 'gaming'),
       },
-      { key: 'gaming', label: 'Gaming', list: events.filter((e) => e.category === 'gaming') },
+      {
+        key: 'mini-games',
+        label: 'Mini-Games Zone (Free)',
+        list: events.filter((e) => e.category === 'mini-games'),
+      },
     ];
 
     return (
@@ -212,8 +219,8 @@ export default function RegistrationClient({ events = [], siteConfig }) {
           <div className={styles.header}>
             <h1 className={styles.title}>Choose an event</h1>
             <p className={styles.subtitle}>
-              Each registration is for <strong>one event</strong> with its own fee and payment QR.
-              Pick an event to continue.
+              Each registration is for <strong>one event</strong>. Paid events use their fee QR;
+              Mini-Games Zone entries are <strong>free</strong>. Pick an event to continue.
             </p>
           </div>
 

@@ -5,6 +5,13 @@ import { SignJWT } from 'jose';
 
 const COOKIE_NAME = 'icon_admin_token';
 
+const cookieBase = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax',
+  path: '/',
+};
+
 /**
  * Validates password and sets HTTP-only JWT cookie
  */
@@ -16,26 +23,20 @@ export async function loginAdmin(prevState, formData) {
   }
 
   if (password !== process.env.ADMIN_PASSWORD) {
-    // Return generic error for security
     return { success: false, message: 'Invalid credentials' };
   }
 
   try {
     const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET);
-    // Create JWT
     const token = await new SignJWT({ role: 'admin' })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
-      .setExpirationTime('1d') // 1 day expiration
+      .setExpirationTime('1d')
       .sign(SECRET_KEY);
 
-    // Set cookie
     (await cookies()).set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 // 1 day
+      ...cookieBase,
+      maxAge: 60 * 60 * 24,
     });
 
     return { success: true };
@@ -46,9 +47,19 @@ export async function loginAdmin(prevState, formData) {
 }
 
 /**
- * Clears the admin token cookie
+ * Clears the admin token cookie (must match path used at login)
  */
 export async function logoutAdmin() {
-  (await cookies()).delete(COOKIE_NAME);
+  const jar = await cookies();
+  // Explicit expire — more reliable than delete() alone in App Router
+  jar.set(COOKIE_NAME, '', {
+    ...cookieBase,
+    maxAge: 0,
+  });
+  try {
+    jar.delete(COOKIE_NAME);
+  } catch {
+    /* ignore */
+  }
   return { success: true };
 }
