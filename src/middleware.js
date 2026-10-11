@@ -51,16 +51,6 @@ export async function middleware(request) {
 }
 
 export const config = {
-  // Apply middleware to all routes except API, Next static, and images
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images (public images)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|images).*)',
-  ],
+  // Exclude all /_next/* (stale clients can request /_next/_next/*)
+  matcher: ['/((?!api|_next/|favicon.ico|images).*)'],
 };

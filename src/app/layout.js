@@ -1,11 +1,7 @@
 import { Outfit, Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
-import Navbar from '@/components/Navbar/Navbar';
-import FooterGate from '@/components/Footer/FooterGate';
-import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
-import ScrollToTopGate from '@/components/ScrollToTop/ScrollToTopGate';
-import PageTransition from '@/components/PageTransition/PageTransition';
+import ChunkLoadRecovery from '@/components/ChunkLoadRecovery';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -59,7 +55,7 @@ export const metadata = {
         width: 1200,
         height: 630,
         alt: 'ICON 2026 - KJSIM Techfest',
-      }
+      },
     ],
     type: 'website',
     locale: 'en_IN',
@@ -85,14 +81,8 @@ export default function RootLayout({ children }) {
       className={`${outfit.variable} ${inter.variable} ${spaceGrotesk.variable}`}
     >
       <body suppressHydrationWarning style={{ fontFamily: 'var(--font-inter), sans-serif' }}>
-        <LoadingScreen />
-
-        <Navbar />
-        <main id="main-content">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <FooterGate />
-        <ScrollToTopGate />
+        <ChunkLoadRecovery />
+        {children}
         <Toaster
           position="top-right"
           toastOptions={{
@@ -117,4 +107,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
